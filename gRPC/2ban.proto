@@ -1,0 +1,11 @@
+syntax = "proto3";
+option go_package = ".";
+service IP2ban {
+  rpc IP (IPStringRequest) returns (OKReply) {}
+}
+message IPStringRequest {
+  string ip = 1;
+}
+message OKReply {
+  bool ok = 1;
+}
