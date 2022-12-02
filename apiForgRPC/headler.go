@@ -2,6 +2,7 @@ package apiForgRPC
 
 import (
 	context "context"
+	"microservice2ban/pkg/validator"
 )
 
 type Server struct {
@@ -9,5 +10,9 @@ type Server struct {
 }
 
 func (s *Server) IP(ctx context.Context, in *IPStringRequest) (*OKReply, error) {
-	return &OKReply{Ok: true}, nil
+	err := validator.CheckIp(in.Ip)
+	if err == nil {
+		return &OKReply{Ok: true}, nil
+	}
+	return &OKReply{Ok: false}, err
 }
