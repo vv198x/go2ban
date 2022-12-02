@@ -3,6 +3,7 @@ package addFirewall
 import (
 	"fmt"
 	"log"
+	"microservice2ban/pkg/logger"
 	"os/exec"
 )
 
@@ -19,6 +20,7 @@ func firewalldBlock(ip string) {
 		if err != nil {
 			log.Println(err)
 		}
+		logger.SendSyslogMail("BANED: " + ip)
 	} else {
 		log.Println("Dont add address to rule ", ip)
 	}
