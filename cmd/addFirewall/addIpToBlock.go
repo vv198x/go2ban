@@ -9,7 +9,7 @@ import (
 func BlockIP(ip string) {
 	switch whatFirewall() {
 	case "firewalld":
-
+		firewalldBlock(ip)
 	}
 }
 
