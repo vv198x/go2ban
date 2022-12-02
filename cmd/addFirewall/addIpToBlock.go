@@ -1,13 +1,16 @@
 package addFirewall
 
 import (
-	"fmt"
+	"log"
 	"microservice2ban/pkg/osUtil"
 	"path/filepath"
 )
 
 func BlockIP(ip string) {
-	fmt.Println(whatFirewall())
+	switch whatFirewall() {
+	case "firewalld":
+
+	}
 }
 
 func whatFirewall() (firewallType string) {
@@ -24,4 +27,6 @@ func whatFirewall() (firewallType string) {
 			return firewall
 		}
 	}
+	log.Fatalln("Firewall not found")
+	return
 }
