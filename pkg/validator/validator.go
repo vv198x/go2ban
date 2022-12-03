@@ -2,19 +2,20 @@ package validator
 
 import (
 	"errors"
-	"microservice2ban/pkg/osUtil"
+	"go2ban/pkg/osUtil"
 	"regexp"
 )
 
-func CheckIp(target string) error {
+func CheckIp(target string) (end string, err error) {
 	localAddress := osUtil.GetLocalIPs()
-	if regexp.MustCompile(`^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$`).MatchString(target) {
+	target = regexp.MustCompile(`^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}`).FindString(target)
+	if target != "" {
 		for _, addr := range localAddress {
 			if target == addr {
-				return errors.New("This is local ip: " + target)
+				return "", errors.New("This is local ip: " + target)
 			}
 		}
-		return nil
+		return target, nil
 	}
-	return errors.New("Wrong ip: " + target)
+	return "", errors.New("Wrong ip: " + target)
 }

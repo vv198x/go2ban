@@ -1,0 +1,10 @@
+[Unit]
+Description=go2ban
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/go2ban -d
+
+[Install]
+WantedBy=multi-user.target

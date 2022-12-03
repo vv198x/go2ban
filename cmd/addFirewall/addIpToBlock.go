@@ -1,8 +1,8 @@
 package addFirewall
 
 import (
+	"go2ban/pkg/osUtil"
 	"log"
-	"microservice2ban/pkg/osUtil"
 	"path/filepath"
 )
 

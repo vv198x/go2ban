@@ -4,22 +4,8 @@ import (
 	"flag"
 )
 
-const (
-	defaultTmp = "/tmp"
-	defaultLog = "./"
-)
-
-var (
-	tmpDir = flag.String("tmpDir", defaultTmp, "Directory for cache scanners")
-	logDir = flag.String("logDir", defaultLog, "Directory for logs")
-)
-
-func Get(flag string) string {
-	switch flag {
-	case "tmpDir":
-		return *tmpDir
-	case "logDir":
-		return *logDir
-	}
-	return ""
+func init() {
+	exportCfg.ConfigFile = *flag.String("cfgFile", defaultCfgFile, "Path to file go2ban.conf")
+	exportCfg.RunAsDaemon = *flag.Bool("d", defaultRunDaemon, "Run as daemon")
+	flag.Parse()
 }

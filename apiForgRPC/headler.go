@@ -2,8 +2,8 @@ package apiForgRPC
 
 import (
 	"context"
-	"microservice2ban/cmd/addFirewall"
-	"microservice2ban/pkg/validator"
+	"go2ban/cmd/addFirewall"
+	"go2ban/pkg/validator"
 )
 
 type Server struct {
@@ -11,10 +11,11 @@ type Server struct {
 }
 
 func (s *Server) IP(ctx context.Context, in *IPStringRequest) (*OKReply, error) {
-	err := validator.CheckIp(in.Ip)
+	ip, err := validator.CheckIp(in.Ip)
 	if err == nil {
-		go addFirewall.BlockIP(in.Ip)
+		go addFirewall.BlockIP(ip)
 		return &OKReply{Ok: true}, nil
 	}
+	ctx.Done()
 	return &OKReply{Ok: false}, err
 }

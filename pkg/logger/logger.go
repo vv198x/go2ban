@@ -1,13 +1,12 @@
 package logger
 
 import (
+	"go2ban/pkg/config"
+	"go2ban/pkg/osUtil"
 	"log"
 	"log/syslog"
-	"microservice2ban/pkg/config"
-	"microservice2ban/pkg/osUtil"
 	"os"
 	"path/filepath"
-	"reflect"
 )
 
 const logExp = ".log"
@@ -19,7 +18,7 @@ func init() {
 var logFile *os.File
 
 func Start() {
-	logFilePath := filepath.Join(config.Get("logDir"), osUtil.DateNow()+logExp)
+	logFilePath := filepath.Join(config.Get().LogDir, osUtil.DateNow()+logExp)
 	logFile, err := os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
 		log.Fatalln("Dont create log file")
@@ -27,10 +26,8 @@ func Start() {
 	log.SetOutput(logFile)
 }
 
-type Empty struct{}
-
 func SendSyslogMail(msg string) {
-	syslog, err := syslog.New(syslog.LOG_MAIL, reflect.TypeOf(Empty{}).PkgPath())
+	syslog, err := syslog.New(syslog.LOG_MAIL, "go2ban")
 	if err != nil {
 		log.Println("Load syslog ", err)
 	} else {
