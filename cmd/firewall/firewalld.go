@@ -3,10 +3,10 @@ package firewall
 import (
 	"errors"
 	"fmt"
-	"go2ban/pkg/logger"
 	"log"
 	"os/exec"
 	"regexp"
+	"time"
 )
 
 func firewallBlock(ip string) {
@@ -15,17 +15,18 @@ func firewallBlock(ip string) {
 	byteArr, err := runOutputFirewalld(firewallCMD)
 	if err == nil && string(byteArr) == "success\n" {
 		err = reloadFirewalld()
-		logger.SendSyslogMail("BANED: " + ip)
+		//logger.SendSyslogMail("BANED: " + ip)
 	} else {
 		log.Println("Dont add address to rule ", ip, err)
 	}
 }
 
 func firewalldUnlockAll() (ips int, err error) {
+	t1 := time.Now()
 	byteArr, err := runOutputFirewalld(`firewall-cmd  --list-rich-rules`)
 	if err != nil {
 		log.Println("firewalldUnlockAll get list ", err)
-		return
+		return -1, err
 	}
 	IPst := regexp.MustCompile(`((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}`).FindAll(byteArr, -1)
 	countIP := len(IPst)
@@ -36,14 +37,16 @@ func firewalldUnlockAll() (ips int, err error) {
 			firewallCMD := fmt.Sprintf(
 				`firewall-cmd --permanent --remove-rich-rule="rule family='ipv4' source address='%s' drop"`, ip)
 			byteArr, err = runOutputFirewalld(firewallCMD)
-			if err != nil && string(byteArr) != "success\n" {
-				log.Println("Dont remove-rich-rule ", string(byteArr))
-				return len(IPst), errors.New("Can't delete rule with ip address: " + string(ip))
+			if err != nil {
+				log.Printf("Dont remove-rich-rule %s\n", byteArr)
+				return len(IPst), errors.New(fmt.Sprintf("Can't delete rule with ip address - %s!", ip))
 			}
 			countIP--
 		}
 		if countIP == 0 {
 			err = reloadFirewalld()
+			t2 := time.Now()
+			log.Println(t2.Sub(t1), " unlock IPs. ", len(IPst))
 			if err == nil {
 				return len(IPst), nil
 			}

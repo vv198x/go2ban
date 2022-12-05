@@ -12,4 +12,5 @@ func main() {
 	logger.Start()
 	commandLine.Run()
 	apiForgRPC.Start("tcp", ":2048", config.Get().Flags.RunAsDaemon)
+
 }

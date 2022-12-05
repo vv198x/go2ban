@@ -2,7 +2,7 @@
 cd ..
 GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o deploy/go2ban
 cd deploy
-echo -s
+echo -install
 scp go2ban n:/root/go2ban/
 if [ "-install" = "$1" ]
 then
