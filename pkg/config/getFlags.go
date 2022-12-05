@@ -1,11 +1,12 @@
 package config
 
-import (
-	"flag"
-)
+import "flag"
 
 func init() {
-	exportCfg.ConfigFile = *flag.String("cfgFile", defaultCfgFile, "Path to file go2ban.conf")
-	exportCfg.RunAsDaemon = *flag.Bool("d", defaultRunDaemon, "Run as daemon")
+	cfgFile := flag.String("cfgFile", defaultCfgFile, "Path to file go2ban.conf")
+	daemon := flag.Bool("d", defaultRunDaemon, "Run as daemon")
+	//TODO unban ip unban *
 	flag.Parse()
+	exportCfg.ConfigFile = *cfgFile
+	exportCfg.RunAsDaemon = *daemon
 }

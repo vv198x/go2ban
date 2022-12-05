@@ -1,7 +1,7 @@
 package main
 
 import (
-	"go2ban/apiForgRPC"
+	"fmt"
 	"go2ban/pkg/config"
 	"go2ban/pkg/logger"
 )
@@ -9,5 +9,6 @@ import (
 func main() {
 	config.Load()
 	logger.Start()
-	apiForgRPC.Start("tcp", ":2048", config.Get().RunAsDaemon)
+	//apiForgRPC.Start("tcp", ":2048", config.Get().RunAsDaemon)
+	fmt.Println(*config.Get())
 }

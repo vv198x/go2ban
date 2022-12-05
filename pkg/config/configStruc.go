@@ -4,7 +4,7 @@ type cfg struct {
 	RunAsDaemon bool
 	ConfigFile  string
 	LogDir      string
-	firewall    string
+	Firewall    string
 	whiteList   []string
 }
 
@@ -13,8 +13,10 @@ const (
 	defaultRunDaemon = false
 )
 
+// default
 var exportCfg = cfg{
-	LogDir: "/var/log/go2ban",
+	LogDir:   "/var/log/go2ban",
+	Firewall: "firewalld",
 }
 
 func Get() *cfg {
