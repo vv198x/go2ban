@@ -2,11 +2,11 @@ package logger
 
 import (
 	"go2ban/pkg/config"
-	"go2ban/pkg/osUtil"
 	"log"
 	"log/syslog"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 const logExp = ".log"
@@ -18,7 +18,9 @@ func init() {
 var logFile *os.File
 
 func Start() {
-	logFilePath := filepath.Join(config.Get().LogDir, osUtil.DateNow()+logExp)
+	logFilePath := filepath.Join(
+		config.Get().LogDir,
+		time.Now().Format("06.01.02")+logExp)
 	logFile, err := os.OpenFile(logFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
 		log.Fatalln("Dont create log file")
