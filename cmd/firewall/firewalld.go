@@ -1,4 +1,4 @@
-package addFirewall
+package firewall
 
 import (
 	"errors"
@@ -21,10 +21,10 @@ func firewallBlock(ip string) {
 	}
 }
 
-func FirewallUnBlockAll() (ips int, err error) { //TODO change F to f
+func firewalldUnlockAll() (ips int, err error) {
 	byteArr, err := runOutputFirewalld(`firewall-cmd  --list-rich-rules`)
 	if err != nil {
-		log.Println("FirewallUnBlockAll get list ", err)
+		log.Println("firewalldUnlockAll get list ", err)
 		return
 	}
 	IPst := regexp.MustCompile(`((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}`).FindAll(byteArr, -1)
@@ -34,23 +34,22 @@ func FirewallUnBlockAll() (ips int, err error) { //TODO change F to f
 	} else {
 		for _, ip := range IPst {
 			firewallCMD := fmt.Sprintf(
-				`firewall-cmd --permanent --remove-rich-rule="rule family='ipv4' source address='%v' drop"`, ip)
+				`firewall-cmd --permanent --remove-rich-rule="rule family='ipv4' source address='%s' drop"`, ip)
 			byteArr, err = runOutputFirewalld(firewallCMD)
 			if err != nil && string(byteArr) != "success\n" {
-				log.Println("Dont remove-rich-rule ", ip, err)
+				log.Println("Dont remove-rich-rule ", string(byteArr))
 				return len(IPst), errors.New("Can't delete rule with ip address: " + string(ip))
-			} else {
-				countIP--
 			}
+			countIP--
 		}
-		if countIP < 0 {
+		if countIP == 0 {
 			err = reloadFirewalld()
 			if err == nil {
 				return len(IPst), nil
 			}
 		}
 	}
-	return -1, nil
+	return countIP, err
 }
 
 func reloadFirewalld() error {

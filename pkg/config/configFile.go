@@ -8,10 +8,10 @@ import (
 )
 
 func Load() {
-	if !osUtil.CheckFile(exportCfg.ConfigFile) {
+	if !osUtil.CheckFile(exportCfg.Flags.ConfigFile) {
 		log.Fatalln("Config file not found")
 	}
-	cfgSt, err := osUtil.ReadStsFile(exportCfg.ConfigFile)
+	cfgSt, err := osUtil.ReadStsFile(exportCfg.Flags.ConfigFile)
 	if err != nil || len(cfgSt) == 0 {
 		log.Fatalln("Err read config file", err)
 	}
@@ -25,9 +25,9 @@ func Load() {
 				if strings.Contains(splitSt[1], "auto") {
 					firewallName := whatFirewall()
 					cfgSt[i] = strings.Join([]string{splitSt[0], firewallName}, "=")
-					err = osUtil.WriteStrsFile(cfgSt, exportCfg.ConfigFile)
+					err = osUtil.WriteStrsFile(cfgSt, exportCfg.Flags.ConfigFile)
 					if err != nil {
-						log.Println("Cant write config", err)
+						log.Println("Cant overwrite config", err)
 					}
 					exportCfg.Firewall = firewallName
 				} else {

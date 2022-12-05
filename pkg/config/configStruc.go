@@ -1,11 +1,10 @@
 package config
 
 type cfg struct {
-	RunAsDaemon bool
-	ConfigFile  string
-	LogDir      string
-	Firewall    string
-	whiteList   []string
+	Flags     flags
+	LogDir    string
+	Firewall  string
+	whiteList []string
 }
 
 const (
@@ -15,8 +14,7 @@ const (
 
 // default
 var exportCfg = cfg{
-	LogDir:   "/var/log/go2ban",
-	Firewall: "firewalld",
+	LogDir: "/var/log/go2ban",
 }
 
 func Get() *cfg {

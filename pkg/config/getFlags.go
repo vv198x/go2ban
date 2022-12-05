@@ -1,13 +1,19 @@
 package config
 
-import "flag"
+import . "flag"
+
+type flags struct {
+	RunAsDaemon bool
+	UnlockAll   bool
+	ConfigFile  string
+}
 
 func init() {
-	cfgFile := flag.String("cfgFile", defaultCfgFile, "Path to file go2ban.conf")
-	daemon := flag.Bool("d", defaultRunDaemon, "Run as daemon")
-	//TODO clear := flag.Bool("clear", false, "Remove all rules")
-
-	flag.Parse()
-	exportCfg.ConfigFile = *cfgFile
-	exportCfg.RunAsDaemon = *daemon
+	cfgFile := String("cfgFile", defaultCfgFile, "Path to file go2ban.conf")
+	daemon := Bool("d", defaultRunDaemon, "Run as daemon")
+	clear := Bool("clear", false, "Remove all rules")
+	Parse()
+	exportCfg.Flags.ConfigFile = *cfgFile
+	exportCfg.Flags.RunAsDaemon = *daemon
+	exportCfg.Flags.UnlockAll = *clear
 }
