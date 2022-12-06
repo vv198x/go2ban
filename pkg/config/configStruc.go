@@ -1,10 +1,18 @@
 package config
 
-type cfg struct {
+type Cfg struct {
 	Flags     flags
 	LogDir    string
 	Firewall  string
+	Services  []Service `json:"Service"`
 	whiteList []string
+}
+
+type Service struct {
+	Name    string
+	On      bool
+	LogFile string
+	Regxp   string
 }
 
 const (
@@ -13,10 +21,10 @@ const (
 )
 
 // default
-var exportCfg = cfg{
+var exportCfg = Cfg{
 	LogDir: "/var/log/go2ban",
 }
 
-func Get() *cfg {
+func Get() *Cfg {
 	return &exportCfg
 }

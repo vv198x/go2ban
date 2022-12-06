@@ -1,6 +1,8 @@
 package config
 
 import (
+	"encoding/json"
+	"fmt"
 	"go2ban/pkg/osUtil"
 	"log"
 	"path/filepath"
@@ -15,6 +17,7 @@ func Load() {
 	if err != nil || len(cfgSt) == 0 {
 		log.Fatalln("Err read config file", err)
 	}
+	jsonData := []byte{}
 	for i, line := range cfgSt {
 		splitSt := strings.Split(line, "=")
 		if line[0] != byte('#') && len(splitSt) > 0 {
@@ -27,7 +30,7 @@ func Load() {
 					cfgSt[i] = strings.Join([]string{splitSt[0], firewallName}, "=")
 					err = osUtil.WriteStrsFile(cfgSt, exportCfg.Flags.ConfigFile)
 					if err != nil {
-						log.Println("Cant overwrite config", err)
+						log.Println("Cant overwrite config file", err)
 					}
 					exportCfg.Firewall = firewallName
 				} else {
@@ -35,17 +38,31 @@ func Load() {
 				}
 			}
 		}
+		if line == "{" {
+			for _, jsonSt := range cfgSt[i:] {
+				jsonData = append(jsonData, jsonSt[:]...)
+			}
+			break
+		}
 	}
+	if len(jsonData) > 0 {
+		err = json.Unmarshal(jsonData, &exportCfg)
+		if err != nil {
+			log.Println("Wrong json format in config file ", err)
+		}
+	}
+	fmt.Println(exportCfg)
+
 }
 
 func whatFirewall() (firewallType string) {
-	systemdEnableServiseDir := "/etc/systemd/system/multi-user.target.wants/"
+	systemdEnableServiceDir := "/etc/systemd/system/multi-user.target.wants/"
 	firewalls := []string{
 		"firewalld", //"ufw",//"shorewall",
 		"iptables",
 	}
 	for _, firewall := range firewalls {
-		serviceFile := filepath.Join(systemdEnableServiseDir, firewall+".service")
+		serviceFile := filepath.Join(systemdEnableServiceDir, firewall+".service")
 		if osUtil.CheckFile(serviceFile) {
 			return firewall
 		}
