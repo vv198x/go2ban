@@ -15,6 +15,7 @@ func CheckIp(target string) (end string, err error) {
 				return "", errors.New("This is local ip: " + target)
 			}
 		}
+		for i, addr := range
 		return target, nil
 	}
 	return "", errors.New("Wrong ip: " + target)

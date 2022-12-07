@@ -5,7 +5,7 @@ type Cfg struct {
 	LogDir    string
 	Firewall  string
 	Services  []Service `json:"Service"`
-	whiteList []string
+	WhiteList []string
 }
 
 type Service struct {

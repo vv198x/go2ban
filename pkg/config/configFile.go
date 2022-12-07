@@ -36,6 +36,9 @@ func Load() {
 				} else {
 					exportCfg.Firewall = splitSt[1]
 				}
+			case "white_list":
+				exportCfg.WhiteList = strings.Fields(splitSt[1])
+				fmt.Println(exportCfg.WhiteList)
 			}
 		}
 		if line == "{" {
