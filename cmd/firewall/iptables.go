@@ -1,80 +1,55 @@
 package firewall
 
 import (
+	"bytes"
 	"errors"
-	"fmt"
 	"log"
 	"os/exec"
-	"regexp"
-	"time"
 )
 
-func firewallBlock(ip string) {
-	firewallCMD := fmt.Sprintf(
-		`firewall-cmd --permanent --add-rich-rule="rule family='ipv4' source address='%v' drop"`, ip)
-	byteArr, err := runOutputFirewalld(firewallCMD)
-	if err == nil && string(byteArr) == "success\n" {
-		err = reloadFirewalld()
-		//logger.SendSyslogMail("BANED: " + ip)
-	} else {
-		log.Println("Dont add address to rule ", ip, err)
+func iptablesBlock(ip string) {
+	err := runCMD("iptables -A go2ban -s " + ip + " -j DROP")
+	if err != nil {
+		log.Println("Not blocked ", ip, err)
+	}
+}
+
+func workerIptables() {
+	err := runCMD("iptables -N go2ban")
+	if err != nil && err.Error() != "exit status 1" {
+		log.Println("Not add chain go2ban ", err)
+	}
+	byt, err := runOutputCMD("iptables-save")
+	if len(byt) == 0 {
+		log.Fatalln("Can't get iptables settings, iptables-save", err)
+	}
+	if !bytes.Contains(byt, []byte{'j', ' ', 'g', 'o', '2', 'b', 'a', 'n'}) {
+		err := runCMD("iptables -A INPUT -j go2ban")
+		if err != nil {
+			log.Println("Not add chain go2ban to table input ", err)
+		}
 	}
 }
 
 func firewalldUnlockAll() (ips int, err error) {
-	t1 := time.Now()
-	byteArr, err := runOutputFirewalld(`firewall-cmd  --list-rich-rules`)
-	if err != nil {
-		log.Println("firewalldUnlockAll get list ", err)
-		return -1, err
+	byt, err := runOutputCMD("iptables-save")
+	if err == nil {
+		ips = bytes.Count(byt, []byte{'A', ' ', 'g', 'o', '2', 'b', 'a', 'n'})
 	}
-	IPst := regexp.MustCompile(`((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}`).FindAll(byteArr, -1)
-	countIP := len(IPst)
-	if countIP == 0 {
-		return len(IPst), errors.New("Rules not found")
-	} else {
-		for _, ip := range IPst {
-			firewallCMD := fmt.Sprintf(
-				`firewall-cmd --permanent --remove-rich-rule="rule family='ipv4' source address='%s' drop"`, ip)
-			byteArr, err = runOutputFirewalld(firewallCMD)
-			if err != nil {
-				log.Printf("Dont remove-rich-rule %s\n", byteArr)
-				return len(IPst), errors.New(fmt.Sprintf("Can't delete rule with ip address - %s!", ip))
-			}
-			countIP--
-		}
-		if countIP == 0 {
-			err = reloadFirewalld()
-			t2 := time.Now()
-			log.Println(t2.Sub(t1), " unlock IPs. ", len(IPst))
-			if err == nil {
-				return len(IPst), nil
-			}
-		}
+	err = runCMD(`iptables -F go2ban`)
+	if err != nil && err.Error() != "exit status 1" {
+		log.Println("Don't del list ", err)
+		return 0, errors.New("Not found chain go2ban")
 	}
-	return countIP, err
+	return
 }
 
-func reloadFirewalld() error {
-	firewallCMD := "firewall-cmd --reload"
-	err := runCmdFirewalld(firewallCMD)
-	if err != nil {
-		log.Println("Dont reload firewalld ", err)
-	}
+func runCMD(firewallCMD string) error {
+	err := exec.Command("sh", "-c", firewallCMD).Run()
 	return err
 }
 
-func runCmdFirewalld(firewallCMD string) error {
-	err := exec.Command("sudo", "bash", "-c", firewallCMD).Run()
-	if err != nil {
-		log.Println("runCmdFirewalld", err)
-	}
-	return err
-}
-func runOutputFirewalld(firewallCMD string) ([]byte, error) {
-	b, err := exec.Command("sudo", "bash", "-c", firewallCMD).Output()
-	if err != nil {
-		log.Println("runOutputFirewalld ", err)
-	}
+func runOutputCMD(firewallCMD string) ([]byte, error) {
+	b, err := exec.Command("sh", "-c", firewallCMD).Output()
 	return b, err
 }

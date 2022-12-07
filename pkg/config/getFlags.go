@@ -13,7 +13,8 @@ func init() {
 	daemon := Bool("d", defaultRunDaemon, "Run as daemon")
 	clear := Bool("clear", false, "Remove all rules")
 	Parse()
-	exportCfg.Flags.ConfigFile = *cfgFile
+	//TODO if daemon and root > fatal
 	exportCfg.Flags.RunAsDaemon = *daemon
+	exportCfg.Flags.ConfigFile = *cfgFile
 	exportCfg.Flags.UnlockAll = *clear
 }

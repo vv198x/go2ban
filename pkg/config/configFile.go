@@ -2,10 +2,8 @@ package config
 
 import (
 	"encoding/json"
-	"fmt"
 	"go2ban/pkg/osUtil"
 	"log"
-	"path/filepath"
 	"strings"
 )
 
@@ -38,7 +36,6 @@ func Load() {
 				}
 			case "white_list":
 				exportCfg.WhiteList = strings.Fields(splitSt[1])
-				fmt.Println(exportCfg.WhiteList)
 			}
 		}
 		if line == "{" {
@@ -54,12 +51,15 @@ func Load() {
 			log.Println("Wrong json format in config file ", err)
 		}
 	}
-	fmt.Println(exportCfg)
-
 }
 
 func whatFirewall() (firewallType string) {
-	systemdEnableServiceDir := "/etc/systemd/system/multi-user.target.wants/"
+	if osUtil.CheckFile("/usr/sbin/iptables") {
+		return "iptables"
+	} else {
+		log.Fatalln("iptables not found")
+	}
+	/*systemdEnableServiceDir := "/etc/systemd/system/multi-user.target.wants/"
 	firewalls := []string{
 		"firewalld", //"ufw",//"shorewall",
 		"iptables",
@@ -70,6 +70,6 @@ func whatFirewall() (firewallType string) {
 			return firewall
 		}
 	}
-	log.Fatalln("Firewall not found")
+	log.Fatalln("Firewall not found")*/
 	return
 }

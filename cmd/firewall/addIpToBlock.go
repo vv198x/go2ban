@@ -6,14 +6,14 @@ import (
 
 func BlockIP(ip string) {
 	switch config.Get().Firewall {
-	case "firewalld":
-		firewallBlock(ip)
+	case "iptables":
+		iptablesBlock(ip)
 	}
 }
 
 func UnlockAll() (blockedIp int, err error) {
 	switch config.Get().Firewall {
-	case "firewalld":
+	case "iptables":
 		return firewalldUnlockAll()
 	}
 	return
@@ -23,7 +23,7 @@ func UnlockAll() (blockedIp int, err error) {
 func TmpTest() {
 	for i := 0; i < 10; i++ {
 		rand.Seed(time.Now().UTC().UnixNano())
-		firewallBlock(fmt.Sprintf("%d.%d.%d.%d",
+		iptablesBlock(fmt.Sprintf("%d.%d.%d.%d",
 			1+rand.Intn(255-1), 1+rand.Intn(255-1), 1+rand.Intn(255-1), 1+rand.Intn(255-1)))
 
 	}
