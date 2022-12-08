@@ -5,15 +5,19 @@ import (
 	"go2ban/pkg/osUtil"
 	"log"
 	"strings"
+	"syscall"
 )
 
 func Load() {
+	if syscall.Getegid() != 0 {
+		log.Fatalln("Only the root user is allowed to run")
+	}
 	if !osUtil.CheckFile(exportCfg.Flags.ConfigFile) {
 		log.Fatalln("Config file not found")
 	}
 	cfgSt, err := osUtil.ReadStsFile(exportCfg.Flags.ConfigFile)
 	if err != nil || len(cfgSt) == 0 {
-		log.Fatalln("Err read config file", err)
+		log.Fatalln("Err read config file ")
 	}
 	jsonData := []byte{}
 	for i, line := range cfgSt {

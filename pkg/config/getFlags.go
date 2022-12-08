@@ -11,9 +11,8 @@ type flags struct {
 func init() {
 	cfgFile := String("cfgFile", defaultCfgFile, "Path to file go2ban.conf")
 	daemon := Bool("d", defaultRunDaemon, "Run as daemon")
-	clear := Bool("clear", false, "Remove all rules")
+	clear := Bool("clear", false, "Unlock all")
 	Parse()
-	//TODO if daemon and root > fatal
 	exportCfg.Flags.RunAsDaemon = *daemon
 	exportCfg.Flags.ConfigFile = *cfgFile
 	exportCfg.Flags.UnlockAll = *clear
