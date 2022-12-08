@@ -1,4 +1,8 @@
 #!/usr/bin/sh
+if [[ $EUID -ne 0 ]]; then
+  echo "You must run this with superuser priviliges.  Try \"sudo ./install.sh\"" 2>&1
+  exit 1
+fi
 cd /root/go2ban
 systemctl stop go2ban
 mkdir /var/log/go2ban

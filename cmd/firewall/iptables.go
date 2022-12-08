@@ -24,11 +24,11 @@ func workerIptables() {
 		log.Fatalln("Can't get iptables settings, iptables-save", err)
 	}
 	if !bytes.Contains(byt, []byte{'j', ' ', 'g', 'o', '2', 'b', 'a', 'n'}) {
-		err := runCMD("iptables -A INPUT -j go2ban")
+		err = runCMD("iptables -I INPUT -j go2ban")
 		if err != nil {
 			log.Println("Not add chain go2ban to table input ", err)
 		}
-	}
+	} // reload for DDOS
 }
 
 func firewalldUnlockAll() (ips int, err error) {
