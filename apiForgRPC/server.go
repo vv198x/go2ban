@@ -1,18 +1,24 @@
 package apiForgRPC
 
 import (
+	"go2ban/pkg/config"
 	"google.golang.org/grpc"
+	"log"
 	"net"
+	"strings"
 )
 
-func Start(protocol, address string, runAsDaemon bool) {
+func Start(runAsDaemon bool) {
 	if runAsDaemon {
-		lis, err := net.Listen(protocol, address)
-		s := grpc.NewServer()
-		RegisterIP2BanServer(s, &Server{})
-		err = s.Serve(lis)
-		if err != nil {
-			panic(err)
+		split := strings.Split(config.Get().GrpcPort, "/")
+		if len(split) > 1 {
+			lis, err := net.Listen(split[1], ":"+split[0])
+			s := grpc.NewServer()
+			RegisterIP2BanServer(s, &Server{})
+			err = s.Serve(lis)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 	}
 }

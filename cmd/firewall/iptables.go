@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"go2ban/pkg/config"
 	"log"
 	"os/exec"
+	"time"
 )
 
 func iptablesBlock(ctx context.Context, ip string) {
@@ -15,7 +17,7 @@ func iptablesBlock(ctx context.Context, ip string) {
 	}
 }
 
-func workerIptables() { //TODO add clear list
+func workerIptables() {
 	err := runCMD("iptables --table raw --new go2ban")
 	if err != nil && err.Error() != "exit status 1" {
 		log.Println("Not add chain go2ban ", err)
@@ -30,17 +32,37 @@ func workerIptables() { //TODO add clear list
 			log.Println("Not add chain go2ban to table raw ", err)
 		}
 	}
+	go func() {
+		for {
+			count := countBlocked()
+			cfgMaxLocked := config.Get().BlockedIps
+			if count > 0 && cfgMaxLocked < count {
+				for i := 0; i < (count-cfgMaxLocked)+cfgMaxLocked/10; i++ {
+					err = runCMD("iptables --table raw --delete go2ban 1")
+					if err != nil && err.Error() != "exit status 1" {
+						log.Println("Can't del ip ", err)
+					}
+				}
+			}
+			time.Sleep(time.Hour * sleepHour)
+		}
+	}()
 }
 
-func firewalldUnlockAll() (ips int, err error) {
-	byt, err := runOutputCMD("iptables-save")
-	if err == nil {
-		ips = bytes.Count(byt, []byte{'A', ' ', 'g', 'o', '2', 'b', 'a', 'n'})
-	}
+func iptablesUnlockAll() (ips int, err error) {
+	ips = countBlocked()
 	err = runCMD(`iptables --table raw --flush go2ban`)
 	if err != nil && err.Error() != "exit status 1" {
 		log.Println("Don't del list ", err)
 		return 0, errors.New("Not found chain go2ban")
+	}
+	return
+}
+
+func countBlocked() (ips int) {
+	byt, err := runOutputCMD("iptables-save")
+	if err == nil {
+		ips = bytes.Count(byt, []byte{'A', ' ', 'g', 'o', '2', 'b', 'a', 'n'})
 	}
 	return
 }

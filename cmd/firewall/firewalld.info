@@ -1,3 +1,0 @@
-firewall-cmd --list-rich-rules
-firewall-cmd --permanent --add-rich-rule="rule family='ipv4' source address='ip' drop"
-firewall-cmd --reload

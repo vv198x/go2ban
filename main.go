@@ -13,6 +13,6 @@ func main() {
 	logger.Start()
 	commandLine.Run()
 	firewall.WorkerStart(config.Get().Flags.RunAsDaemon)
-	apiForgRPC.Start("tcp", ":2048", config.Get().Flags.RunAsDaemon)
+	apiForgRPC.Start(config.Get().Flags.RunAsDaemon)
 
 }

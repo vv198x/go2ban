@@ -1,11 +1,13 @@
 package config
 
 type Cfg struct {
-	Flags     flags
-	LogDir    string
-	Firewall  string
-	Services  []Service `json:"Service"`
-	WhiteList []string
+	Flags      flags
+	Firewall   string
+	LogDir     string
+	GrpcPort   string
+	BlockedIps int
+	Services   []Service `json:"Service"`
+	WhiteList  []string
 }
 
 type Service struct {
@@ -16,14 +18,13 @@ type Service struct {
 }
 
 const (
-	defaultCfgFile   = "/etc/go2ban/go2ban.conf"
-	defaultRunDaemon = false
+	defaultCfgFile    = "/etc/go2ban/go2ban.conf"
+	defaultRunDaemon  = false
+	defaultLogDir     = "/var/log/go2ban"
+	defaultBlockedIps = 1000
 )
 
-// default
-var exportCfg = Cfg{
-	LogDir: "/var/log/go2ban",
-}
+var exportCfg = Cfg{}
 
 func Get() *Cfg {
 	return &exportCfg

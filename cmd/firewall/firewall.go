@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+const sleepHour = 12
+
 func BlockIP(ctx context.Context, ip string) {
 	switch config.Get().Firewall {
 	case "iptables":
@@ -14,8 +16,8 @@ func BlockIP(ctx context.Context, ip string) {
 	}
 	go func() {
 		select {
-		case <-time.After(10 * time.Microsecond):
-			log.Println("* Longer than average *")
+		case <-time.After(20 * time.Microsecond):
+			log.Println("* Runs longer than usual *")
 		}
 	}()
 }
@@ -23,7 +25,7 @@ func BlockIP(ctx context.Context, ip string) {
 func UnlockAll() (blockedIp int, err error) {
 	switch config.Get().Firewall {
 	case "iptables":
-		return firewalldUnlockAll()
+		return iptablesUnlockAll()
 	}
 	return
 }
@@ -39,11 +41,10 @@ func WorkerStart(RunAsDaemon bool) {
 
 /*
 func TmpTest() {
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 20000; i++ {
 		rand.Seed(time.Now().UTC().UnixNano())
-		iptablesBlock(fmt.Sprintf("%d.%d.%d.%d",
+		iptablesBlock(context.Background(), fmt.Sprintf("%d.%d.%d.%d",
 			1+rand.Intn(255-1), 1+rand.Intn(255-1), 1+rand.Intn(255-1), 1+rand.Intn(255-1)))
-
 	}
 }
 */

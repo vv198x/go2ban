@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"go2ban/pkg/osUtil"
 	"log"
-	"strings"
+	"strconv"
+	. "strings"
 	"syscall"
 )
 
@@ -19,27 +20,36 @@ func Load() {
 	if err != nil || len(cfgSt) == 0 {
 		log.Fatalln("Err read config file ")
 	}
+	exportCfg.LogDir = defaultLogDir
+	exportCfg.BlockedIps = defaultBlockedIps
 	jsonData := []byte{}
 	for i, line := range cfgSt {
-		splitSt := strings.Split(line, "=")
+		splitSt := Split(line, "=")
 		if line[0] != byte('#') && len(splitSt) > 0 {
 			switch splitSt[0] {
+			case "grpc_port":
+				exportCfg.GrpcPort = Split(splitSt[1], " ")[0]
+			case "blocked_ips":
+				toInt, errB := strconv.Atoi(Split(splitSt[1], " ")[0])
+				if errB == nil {
+					exportCfg.BlockedIps = toInt
+				}
 			case "log_dir":
-				exportCfg.LogDir = splitSt[1]
+				exportCfg.LogDir = Split(splitSt[1], " ")[0]
 			case "firewall":
-				if strings.Contains(splitSt[1], "auto") {
+				if Contains(splitSt[1], "auto") {
 					firewallName := whatFirewall()
-					cfgSt[i] = strings.Join([]string{splitSt[0], firewallName}, "=")
+					cfgSt[i] = Join([]string{splitSt[0], firewallName}, "=")
 					err = osUtil.WriteStrsFile(cfgSt, exportCfg.Flags.ConfigFile)
 					if err != nil {
 						log.Println("Cant overwrite config file", err)
 					}
 					exportCfg.Firewall = firewallName
 				} else {
-					exportCfg.Firewall = splitSt[1]
+					exportCfg.Firewall = Split(splitSt[1], " ")[0]
 				}
 			case "white_list":
-				exportCfg.WhiteList = strings.Fields(splitSt[1])
+				exportCfg.WhiteList = Fields(splitSt[1])
 			}
 		}
 		if line == "{" {
@@ -52,7 +62,7 @@ func Load() {
 	if len(jsonData) > 0 {
 		err = json.Unmarshal(jsonData, &exportCfg)
 		if err != nil {
-			log.Println("Wrong json format in config file ", err)
+			log.Println("Wrong json format in config file", err)
 		}
 	}
 }
