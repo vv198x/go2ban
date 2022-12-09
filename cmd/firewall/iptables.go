@@ -2,12 +2,13 @@ package firewall
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"log"
 	"os/exec"
 )
 
-func iptablesBlock(ip string) {
+func iptablesBlock(ctx context.Context, ip string) {
 	err := runCMD("iptables --table raw --append go2ban --source " + ip + " --jump DROP")
 	if err != nil {
 		log.Println("Not blocked ", ip, err)
@@ -26,7 +27,7 @@ func workerIptables() { //TODO add clear list
 	if !bytes.Contains(byt, []byte{'j', ' ', 'g', 'o', '2', 'b', 'a', 'n'}) {
 		err = runCMD("iptables --table raw --insert PREROUTING --jump go2ban")
 		if err != nil {
-			log.Println("Not add chain go2ban to table input ", err)
+			log.Println("Not add chain go2ban to table raw ", err)
 		}
 	}
 }

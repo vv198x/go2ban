@@ -1,14 +1,23 @@
 package firewall
 
 import (
+	"context"
 	"go2ban/pkg/config"
+	"log"
+	"time"
 )
 
-func BlockIP(ip string) {
+func BlockIP(ctx context.Context, ip string) {
 	switch config.Get().Firewall {
 	case "iptables":
-		iptablesBlock(ip)
+		iptablesBlock(ctx, ip)
 	}
+	go func() {
+		select {
+		case <-time.After(10 * time.Microsecond):
+			log.Println("* Longer than average *")
+		}
+	}()
 }
 
 func UnlockAll() (blockedIp int, err error) {

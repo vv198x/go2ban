@@ -13,7 +13,7 @@ type Server struct {
 func (s *Server) IP(ctx context.Context, in *IPStringRequest) (*OKReply, error) {
 	ip, err := validator.CheckIp(in.Ip)
 	if err == nil {
-		go firewall.BlockIP(ip)
+		go firewall.BlockIP(ctx, ip)
 		return &OKReply{Ok: true}, nil
 	}
 	ctx.Done()
