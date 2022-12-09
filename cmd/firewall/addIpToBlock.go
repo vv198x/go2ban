@@ -19,6 +19,15 @@ func UnlockAll() (blockedIp int, err error) {
 	return
 }
 
+func WorkerStart(RunAsDaemon bool) {
+	if RunAsDaemon {
+		switch config.Get().Firewall {
+		case "iptables":
+			workerIptables()
+		}
+	}
+}
+
 /*
 func TmpTest() {
 	for i := 0; i < 10; i++ {

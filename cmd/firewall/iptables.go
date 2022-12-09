@@ -8,14 +8,14 @@ import (
 )
 
 func iptablesBlock(ip string) {
-	err := runCMD("iptables -A go2ban -s " + ip + " -j DROP")
+	err := runCMD("iptables --table raw --append go2ban --source " + ip + " --jump DROP")
 	if err != nil {
 		log.Println("Not blocked ", ip, err)
 	}
 }
 
-func workerIptables() {
-	err := runCMD("iptables -N go2ban")
+func workerIptables() { //TODO add clear list
+	err := runCMD("iptables --table raw --new go2ban")
 	if err != nil && err.Error() != "exit status 1" {
 		log.Println("Not add chain go2ban ", err)
 	}
@@ -24,11 +24,11 @@ func workerIptables() {
 		log.Fatalln("Can't get iptables settings, iptables-save", err)
 	}
 	if !bytes.Contains(byt, []byte{'j', ' ', 'g', 'o', '2', 'b', 'a', 'n'}) {
-		err = runCMD("iptables -I INPUT -j go2ban")
+		err = runCMD("iptables --table raw --insert PREROUTING --jump go2ban")
 		if err != nil {
 			log.Println("Not add chain go2ban to table input ", err)
 		}
-	} // reload for DDOS
+	}
 }
 
 func firewalldUnlockAll() (ips int, err error) {
@@ -36,7 +36,7 @@ func firewalldUnlockAll() (ips int, err error) {
 	if err == nil {
 		ips = bytes.Count(byt, []byte{'A', ' ', 'g', 'o', '2', 'b', 'a', 'n'})
 	}
-	err = runCMD(`iptables -F go2ban`)
+	err = runCMD(`iptables --table raw --flush go2ban`)
 	if err != nil && err.Error() != "exit status 1" {
 		log.Println("Don't del list ", err)
 		return 0, errors.New("Not found chain go2ban")
