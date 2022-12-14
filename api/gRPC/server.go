@@ -1,4 +1,4 @@
-package apiForgRPC
+package gRPC
 
 import (
 	"go2ban/pkg/config"

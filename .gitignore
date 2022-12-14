@@ -2,4 +2,3 @@
 .idea/workspace.xml
 build/
 go.work
-*.log

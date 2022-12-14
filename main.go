@@ -1,7 +1,8 @@
 package main
 
 import (
-	"go2ban/apiForgRPC"
+	"go2ban/api/REST"
+	"go2ban/api/gRPC"
 	"go2ban/cmd/commandLine"
 	"go2ban/cmd/fakeSocks"
 	"go2ban/cmd/firewall"
@@ -15,6 +16,7 @@ func main() {
 	commandLine.Run()
 	firewall.WorkerStart(config.Get().Flags.RunAsDaemon)
 	fakeSocks.Listen(config.Get().FakeSocksPorts)
-	apiForgRPC.Start(config.Get().Flags.RunAsDaemon)
+	REST.Start(config.Get().Flags.RunAsDaemon)
+	gRPC.Start(config.Get().Flags.RunAsDaemon)
 
 }

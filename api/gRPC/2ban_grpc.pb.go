@@ -4,7 +4,7 @@
 // - protoc             v3.19.4
 // source: 2ban.proto
 
-package apiForgRPC
+package gRPC
 
 import (
 	context "context"

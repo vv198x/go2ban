@@ -33,7 +33,9 @@ func Load() {
 
 			switch splitSt[0] {
 			case "grpc_port":
-				exportCfg.GrpcPort = Split(splitSt[1], " ")[0]
+				exportCfg.GrpcPort = Fields(splitSt[1])[0]
+			case "rest_port":
+				exportCfg.RestPort = Fields(splitSt[1])[0]
 
 			case "blocked_ips":
 				toInt, errB := strconv.Atoi(Split(splitSt[1], " ")[0])
@@ -42,7 +44,7 @@ func Load() {
 				}
 
 			case "log_dir":
-				exportCfg.LogDir = Split(splitSt[1], " ")[0]
+				exportCfg.LogDir = Fields(splitSt[1])[0]
 
 			case "firewall":
 				if Contains(splitSt[1], "auto") {
@@ -54,7 +56,7 @@ func Load() {
 					}
 					exportCfg.Firewall = firewallName
 				} else {
-					exportCfg.Firewall = Split(splitSt[1], " ")[0]
+					exportCfg.Firewall = Fields(splitSt[1])[0]
 				}
 
 			case "white_list":

@@ -1,4 +1,4 @@
-package apiForgRPC
+package gRPC
 
 import (
 	"context"

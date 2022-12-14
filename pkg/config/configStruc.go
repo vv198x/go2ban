@@ -5,6 +5,7 @@ type Cfg struct {
 	Firewall       string
 	LogDir         string
 	GrpcPort       string
+	RestPort       string
 	BlockedIps     int
 	Services       []Service `json:"Service"`
 	WhiteList      []string
