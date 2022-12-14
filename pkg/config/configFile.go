@@ -24,6 +24,8 @@ func Load() {
 	exportCfg.LogDir = defaultLogDir
 	exportCfg.BlockedIps = defaultBlockedIps
 	exportCfg.FakeSocksFails = defaultFakeSocksFails
+	exportCfg.ServiceCheckMinutes = defaultServiceCheck
+	exportCfg.SrviceFails = defaultServiceFails
 
 	jsonData := []byte{}
 
@@ -38,8 +40,8 @@ func Load() {
 				exportCfg.RestPort = Fields(splitSt[1])[0]
 
 			case "blocked_ips":
-				toInt, errB := strconv.Atoi(Split(splitSt[1], " ")[0])
-				if errB == nil {
+				toInt, err := strconv.Atoi(Fields(splitSt[1])[0])
+				if err == nil {
 					exportCfg.BlockedIps = toInt
 				}
 
@@ -70,8 +72,18 @@ func Load() {
 						exportCfg.FakeSocksPorts = append(exportCfg.FakeSocksPorts, portInt)
 					}
 				}
-
 			case "fake_socks_fails":
+				fails, err := strconv.Atoi(splitSt[1])
+				if err == nil {
+					exportCfg.FakeSocksFails = fails
+				}
+
+			case "local_service_check_minutes":
+				minutes, err := strconv.Atoi(splitSt[1])
+				if err == nil {
+					exportCfg.FakeSocksFails = minutes
+				}
+			case "local_service_fails":
 				fails, err := strconv.Atoi(splitSt[1])
 				if err == nil {
 					exportCfg.FakeSocksFails = fails

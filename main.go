@@ -6,6 +6,7 @@ import (
 	"go2ban/cmd/commandLine"
 	"go2ban/cmd/fakeSocks"
 	"go2ban/cmd/firewall"
+	"go2ban/cmd/localService"
 	"go2ban/pkg/config"
 	"go2ban/pkg/logger"
 )
@@ -18,5 +19,6 @@ func main() {
 	fakeSocks.Listen(config.Get().FakeSocksPorts)
 	REST.Start(config.Get().Flags.RunAsDaemon)
 	gRPC.Start(config.Get().Flags.RunAsDaemon)
+	localService.WorkerStart(config.Get().Services)
 
 }

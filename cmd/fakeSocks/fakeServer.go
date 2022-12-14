@@ -12,6 +12,10 @@ import (
 )
 
 func Listen(ports []int) {
+	if config.Get().Flags.RunAsDaemon == false {
+		return
+	}
+
 	for _, port := range ports {
 		p := strconv.Itoa(port)
 		p = ":" + p
@@ -34,17 +38,18 @@ func Listen(ports []int) {
 					continue
 				}
 
-				badIp, err := validator.CheckIp(conn.RemoteAddr().String())
+				ip, err := validator.CheckIp(conn.RemoteAddr().String())
 				if err != nil {
 					log.Println("Fake socks error addr", p, err)
 					continue
 				}
 
-				cuntMap.Inc(badIp)
-				if cuntMap.Load(badIp) >= config.Get().FakeSocksFails {
-					ctx := context.Background()
-					go firewall.BlockIP(ctx, badIp)
-					log.Println("Fake socks ip bloked:", badIp)
+				cuntMap.Inc(ip)
+				if cuntMap.Load(ip) >= config.Get().FakeSocksFails {
+
+					go firewall.BlockIP(context.Background(), ip)
+
+					log.Println("Fake socks ip bloked:", ip)
 				}
 			}
 		}()

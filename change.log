@@ -14,6 +14,11 @@ removing 1000 rules takes 20 milliseconds!
 What is the first rules of the docker. Five times less CPU load.
 And connections cannot stay in "established" status, which is important in DDOS.
 0.0.4
-+ Added traps: "fake socks"
++ Added traps: "fake socks" Opens local ports
 When scanning ports, the scanner freezes.
+0.0.5
++ Added a simple rest server, on pure go.
+Request POST ip="127.0.0.1"
+Response on json {"ok":false,"message":"This is local ip: 127.0.0.1"} 400
+
 

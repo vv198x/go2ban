@@ -37,13 +37,15 @@ func workerIptables() {
 		for {
 			count := countBlocked()
 			cfgMaxLocked := config.Get().BlockedIps
-			if count > 0 && cfgMaxLocked < count { //TODO log i clear ... to seconds
+			if count > 0 && cfgMaxLocked < count {
+				start := time.Now()
 				for i := 0; i < (count-cfgMaxLocked)+cfgMaxLocked/10; i++ {
 					err = runCMD("iptables --table raw --delete go2ban 1")
 					if err != nil && err.Error() != "exit status 1" {
 						log.Println("Can't del ip ", err)
 					}
 				}
+				log.Printf("Worker Iptables clear %d in %.2f seconds", count, time.Since(start).Seconds())
 			}
 			time.Sleep(time.Hour * sleepHour)
 		}
