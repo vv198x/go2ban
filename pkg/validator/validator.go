@@ -8,7 +8,7 @@ import (
 )
 
 func CheckIp(target string) (end string, err error) {
-	target = regexp.MustCompile(`^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}`).FindString(target)
+	target = regexp.MustCompile(`((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}`).FindString(target)
 	if target != "" {
 		whiteAddress := osUtil.GetLocalIPs()
 		whiteAddress = append(whiteAddress, config.Get().WhiteList...)

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go2ban/cmd/firewall"
 	"go2ban/pkg/config"
+	"go2ban/pkg/countSyncMap"
 	"go2ban/pkg/validator"
 	"log"
 	"net"
@@ -28,7 +29,7 @@ func Listen(ports []int) {
 			log.Println("Fake socks open port", p)
 			defer listener.Close()
 
-			cuntMap := newCounters()
+			cuntMap := countSyncMap.NewCounters()
 
 			for {
 				conn, err := listener.Accept()
@@ -45,7 +46,7 @@ func Listen(ports []int) {
 				}
 
 				cuntMap.Inc(ip)
-				if cuntMap.Load(ip) >= config.Get().FakeSocksFails {
+				if cuntMap.Load(ip) > config.Get().FakeSocksFails {
 
 					go firewall.BlockIP(context.Background(), ip)
 
