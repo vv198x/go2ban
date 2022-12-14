@@ -11,8 +11,6 @@ import (
 	"strconv"
 )
 
-var mapForSaveFails map[string]uint8
-
 func Listen(ports []int) {
 	for _, port := range ports {
 		p := strconv.Itoa(port)
@@ -26,6 +24,8 @@ func Listen(ports []int) {
 			log.Println("Fake socks open port", p)
 			defer listener.Close()
 
+			cuntMap := newCounters()
+
 			for {
 				conn, err := listener.Accept()
 				defer conn.Close()
@@ -33,13 +33,15 @@ func Listen(ports []int) {
 					fmt.Println("Fake socks listener", p, err)
 					continue
 				}
+
 				badIp, err := validator.CheckIp(conn.RemoteAddr().String())
 				if err != nil {
-					log.Println("Fake socks addr", p, err)
+					log.Println("Fake socks error addr", p, err)
 					continue
 				}
-				mapForSaveFails[badIp]++ //TODO RWmutex
-				if int(mapForSaveFails[badIp]) >= config.Get().FakeSocksFails {
+
+				cuntMap.Inc(badIp)
+				if cuntMap.Load(badIp) >= config.Get().FakeSocksFails {
 					ctx := context.Background()
 					go firewall.BlockIP(ctx, badIp)
 					log.Println("Fake socks ip bloked:", badIp)

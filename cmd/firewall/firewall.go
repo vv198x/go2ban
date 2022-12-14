@@ -16,7 +16,7 @@ func BlockIP(ctx context.Context, ip string) {
 	}
 	go func() {
 		select {
-		case <-time.After(20 * time.Microsecond):
+		case <-time.After(30 * time.Microsecond):
 			log.Println("* Runs longer than usual *")
 		}
 	}()

@@ -16,8 +16,9 @@ func (s *Server) IP(ctx context.Context, in *IPStringRequest) (*OKReply, error) 
 	if err == nil {
 		go firewall.BlockIP(ctx, ip)
 		return &OKReply{Ok: true}, nil
+		log.Println("gRPC ip blocked:", ip)
 	} else {
-		log.Println("gRPC ip blocked", err)
+		log.Println("gRPC validator:", err)
 	}
 	ctx.Done()
 	return &OKReply{Ok: false}, err
