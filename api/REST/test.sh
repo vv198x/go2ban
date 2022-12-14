@@ -1,2 +1,2 @@
 #!/usr/bin/sh
-curl -d "ip=192.168.0.1" -X POST http://localhost:3072/
+curl -d "ip=127.0.0.1" -X POST http://localhost:3072/
