@@ -32,11 +32,12 @@ func workerIptables() {
 			log.Println("Not add chain go2ban to table raw ", err)
 		}
 	}
+	log.Println("Iptables: add chain go2ban to table raw")
 	go func() {
 		for {
 			count := countBlocked()
 			cfgMaxLocked := config.Get().BlockedIps
-			if count > 0 && cfgMaxLocked < count {
+			if count > 0 && cfgMaxLocked < count { //TODO log i clear ... to seconds
 				for i := 0; i < (count-cfgMaxLocked)+cfgMaxLocked/10; i++ {
 					err = runCMD("iptables --table raw --delete go2ban 1")
 					if err != nil && err.Error() != "exit status 1" {
@@ -56,6 +57,7 @@ func iptablesUnlockAll() (ips int, err error) {
 		log.Println("Don't del list ", err)
 		return 0, errors.New("Not found chain go2ban")
 	}
+	log.Println("Iptables: clear all")
 	return
 }
 

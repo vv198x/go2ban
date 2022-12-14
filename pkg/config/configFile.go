@@ -20,22 +20,30 @@ func Load() {
 	if err != nil || len(cfgSt) == 0 {
 		log.Fatalln("Err read config file ")
 	}
+
 	exportCfg.LogDir = defaultLogDir
 	exportCfg.BlockedIps = defaultBlockedIps
+	exportCfg.FakeSocksFails = defaultFakeSocksFails
+
 	jsonData := []byte{}
+
 	for i, line := range cfgSt {
 		splitSt := Split(line, "=")
 		if line[0] != byte('#') && len(splitSt) > 0 {
+
 			switch splitSt[0] {
 			case "grpc_port":
 				exportCfg.GrpcPort = Split(splitSt[1], " ")[0]
+
 			case "blocked_ips":
 				toInt, errB := strconv.Atoi(Split(splitSt[1], " ")[0])
 				if errB == nil {
 					exportCfg.BlockedIps = toInt
 				}
+
 			case "log_dir":
 				exportCfg.LogDir = Split(splitSt[1], " ")[0]
+
 			case "firewall":
 				if Contains(splitSt[1], "auto") {
 					firewallName := whatFirewall()
@@ -48,14 +56,32 @@ func Load() {
 				} else {
 					exportCfg.Firewall = Split(splitSt[1], " ")[0]
 				}
+
 			case "white_list":
 				exportCfg.WhiteList = Fields(splitSt[1])
+
+			case "fake_socks_ports":
+				bufPorts := Fields(splitSt[1])
+				for _, port := range bufPorts {
+					portInt, err := strconv.Atoi(port)
+					if err == nil {
+						exportCfg.FakeSocksPorts = append(exportCfg.FakeSocksPorts, portInt)
+					}
+				}
+
+			case "fake_socks_fails":
+				fails, err := strconv.Atoi(splitSt[1])
+				if err == nil {
+					exportCfg.FakeSocksFails = fails
+				}
 			}
 		}
+
 		if line == "{" {
 			for _, jsonSt := range cfgSt[i:] {
 				jsonData = append(jsonData, jsonSt[:]...)
 			}
+
 			break
 		}
 	}

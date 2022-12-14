@@ -1,13 +1,15 @@
 package config
 
 type Cfg struct {
-	Flags      flags
-	Firewall   string
-	LogDir     string
-	GrpcPort   string
-	BlockedIps int
-	Services   []Service `json:"Service"`
-	WhiteList  []string
+	Flags          flags
+	Firewall       string
+	LogDir         string
+	GrpcPort       string
+	BlockedIps     int
+	Services       []Service `json:"Service"`
+	WhiteList      []string
+	FakeSocksPorts []int
+	FakeSocksFails int
 }
 
 type Service struct {
@@ -18,10 +20,11 @@ type Service struct {
 }
 
 const (
-	defaultCfgFile    = "/etc/go2ban/go2ban.conf"
-	defaultRunDaemon  = false
-	defaultLogDir     = "/var/log/go2ban"
-	defaultBlockedIps = 1000
+	defaultCfgFile        = "/etc/go2ban/go2ban.conf"
+	defaultRunDaemon      = false
+	defaultLogDir         = "/var/log/go2ban"
+	defaultBlockedIps     = 1000
+	defaultFakeSocksFails = 2
 )
 
 var exportCfg = Cfg{}
