@@ -1,0 +1,19 @@
+0.0.1
++ only the firewalld works and gRPC
++ command "-clear" (unlock all)
+- firewalld turned out to be too slow, requests are registered in "linux se" subsystem
+removing 100 rich-rules takes 100 seconds...
+0.0.2
++ add white list
++ firewall changed to clean netfilter(iptables)
+removing 1000 rules takes 20 milliseconds!
+- Docker bypass rules from INPUT
+0.0.3
++ add auto remove from end of list
++ The chain is now added directly to the "raw" table.
+What is the first rules of the docker. Five times less CPU load.
+And connections cannot stay in "established" status, which is important in DDOS.
+0.0.4
++ Added traps: "fake socks"
+When scanning ports, the scanner freezes.
+
