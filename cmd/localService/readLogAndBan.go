@@ -9,11 +9,9 @@ import (
 	"go2ban/pkg/validator"
 	"log"
 	"os"
-	"time"
 )
 
-func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap syncMap.SyncMap, endBytesMap syncMap.SyncMap) {
-	//TODO ReadAt //find byte //sync map name+date = last byte
+func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap, endBytesMap syncMap.SyncMap) {
 	file, err := os.Open(service.LogFile)
 	f, err := file.Stat()
 	if err != nil {
@@ -27,7 +25,10 @@ func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap
 
 	if endByte <= f.Size() {
 		startByte = endByte
+	} else {
+		endBytesMap.Save(service.LogFile, 0)
 	}
+
 	buf := make([]byte, f.Size()-startByte)
 
 	readB, err := file.ReadAt(buf, startByte)
@@ -40,9 +41,12 @@ func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap
 
 	log.Printf("Bytes read %d of filesize %d\n", readB, f.Size()) //TODO del
 
-	if bytes.ContainsAny(buf, service.Regxp) {
-		for bySt := range bytes.Split(buf, []byte{'\n'}) {
-
+	findBytes := []byte(service.Regxp)
+	if bytes.Contains(buf, findBytes) {
+		for _, bySt := range bytes.Split(buf, []byte{'\n'}) {
+			if !bytes.Contains(bySt, findBytes) {
+				continue
+			}
 			ip, err := validator.CheckIp(string(bySt))
 
 			if err == nil {
@@ -56,7 +60,4 @@ func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap
 			}
 		}
 	}
-
-	time.Sleep(time.Second)
-	checkLogAndBlock(ctx, service, countFailsMap, endBytesMap)
 }

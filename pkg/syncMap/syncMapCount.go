@@ -28,3 +28,9 @@ func (c *counters) Increment(key string) {
 
 func (c *counters) Save(key string, v int64) {
 }
+func (c *counters) ReadFromFile(fileMap string) error {
+	return nil
+}
+func (c *counters) WriteToFile(fileMap string) error {
+	return nil
+}
