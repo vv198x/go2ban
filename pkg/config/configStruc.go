@@ -11,7 +11,7 @@ type Cfg struct {
 	FakeSocksPorts      []int
 	FakeSocksFails      int
 	ServiceCheckMinutes int
-	SrviceFails         int
+	ServiceFails        int
 	Services            []Service `json:"Service"`
 }
 

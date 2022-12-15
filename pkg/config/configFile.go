@@ -25,7 +25,7 @@ func Load() {
 	exportCfg.BlockedIps = defaultBlockedIps
 	exportCfg.FakeSocksFails = defaultFakeSocksFails
 	exportCfg.ServiceCheckMinutes = defaultServiceCheck
-	exportCfg.SrviceFails = defaultServiceFails
+	exportCfg.ServiceFails = defaultServiceFails
 
 	jsonData := []byte{}
 

@@ -1,0 +1,30 @@
+package syncMap
+
+import "sync"
+
+type counters struct {
+	mx sync.RWMutex
+	m  map[string]uint8 //255
+}
+
+func NewCountersMap() *counters {
+	return &counters{
+		m: make(map[string]uint8),
+	}
+}
+
+func (c *counters) Load(key string) int64 {
+	c.mx.RLock()
+	defer c.mx.RUnlock()
+	val, _ := c.m[key]
+	return int64(val)
+}
+
+func (c *counters) Increment(key string) {
+	c.mx.Lock()
+	defer c.mx.Unlock()
+	c.m[key]++
+}
+
+func (c *counters) Save(key string, v int64) {
+}
