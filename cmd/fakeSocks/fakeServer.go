@@ -47,7 +47,7 @@ func Listen(ports []int) {
 
 				func(counterMap syncMap.SyncMap) {
 					counterMap.Increment(ip)
-					if int(counterMap.Load(ip)) > config.Get().FakeSocksFails {
+					if int(counterMap.Load(ip))+1 == config.Get().FakeSocksFails {
 
 						go firewall.BlockIP(context.Background(), ip)
 
