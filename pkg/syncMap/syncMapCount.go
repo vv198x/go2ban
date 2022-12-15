@@ -16,6 +16,7 @@ func NewCountersMap() *counters {
 func (c *counters) Load(key string) int64 {
 	c.mx.RLock()
 	defer c.mx.RUnlock()
+
 	val, _ := c.m[key]
 	return int64(val)
 }
@@ -23,6 +24,7 @@ func (c *counters) Load(key string) int64 {
 func (c *counters) Increment(key string) {
 	c.mx.Lock()
 	defer c.mx.Unlock()
+
 	c.m[key]++
 }
 

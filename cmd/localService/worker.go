@@ -2,7 +2,6 @@ package localService
 
 import (
 	"context"
-	"fmt"
 	"go2ban/pkg/config"
 	"go2ban/pkg/syncMap"
 	"log"
@@ -29,27 +28,27 @@ func WorkerStart(services []config.Service) {
 	saveMapFile := filepath.Join(config.Get().LogDir, nameMapFile)
 	err := endBytesMap.ReadFromFile(saveMapFile)
 	if err != nil {
-		fmt.Println(err)
+		log.Println("Can't read from file map: ", err)
 	}
 
-	go func(sleepMinutes int) {
+	go func(sleepMinutes time.Duration) {
 		for {
 			for _, service := range services {
 				if service.On {
 
 					go checkLogAndBlock(ctx, service, countFailsMap, endBytesMap)
-
 				}
 			}
-			time.Sleep(time.Duration(int64(time.Minute) * int64(sleepMinutes)))
+			time.Sleep(sleepMinutes)
 		}
-	}(config.Get().ServiceCheckMinutes)
+	}(time.Duration(int64(time.Minute) * int64(config.Get().ServiceCheckMinutes)))
 
 	func() {
 		for {
 			select {
 			case <-ctx.Done():
 				stop()
+
 				err := endBytesMap.WriteToFile(saveMapFile)
 				if err != nil {
 					log.Printf("Save endBytesMap to file %s, err:%s", saveMapFile, err.Error())

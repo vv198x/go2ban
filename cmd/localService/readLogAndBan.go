@@ -52,6 +52,7 @@ func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap
 			if err == nil {
 				countFailsMap.Increment(ip)
 				if int(countFailsMap.Load(ip))+1 == config.Get().ServiceFails {
+
 					go firewall.BlockIP(ctx, ip)
 
 					log.Printf("Block localservice: %s ip: %s", service.Name, ip)

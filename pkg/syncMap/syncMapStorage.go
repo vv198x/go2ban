@@ -2,7 +2,6 @@ package syncMap
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"sync"
 )
@@ -21,6 +20,7 @@ func NewStorageMap() *storageMap {
 func (c *storageMap) Load(key string) int64 {
 	c.mx.RLock()
 	defer c.mx.RUnlock()
+
 	val, _ := c.m[key]
 	return val
 }
@@ -28,6 +28,7 @@ func (c *storageMap) Load(key string) int64 {
 func (c *storageMap) Save(key string, v int64) {
 	c.mx.RLock()
 	defer c.mx.RUnlock()
+
 	c.m[key] = v
 }
 
@@ -36,8 +37,8 @@ func (c *storageMap) ReadFromFile(fileMap string) error {
 	defer c.mx.RUnlock()
 	buf, err := ioutil.ReadFile(fileMap)
 	if err == nil {
+
 		err = json.Unmarshal(buf, &c.m)
-		fmt.Println(buf, c.m, err)
 	}
 	return err
 }
