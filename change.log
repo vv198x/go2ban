@@ -24,6 +24,7 @@ Response on json {"ok":false,"message":"This is local ip: 127.0.0.1"} 400
 + Added check for brute force sshd passwords as a local service.
 Reading logs of local services, not from the beginning of the file, but from the last stop.
 0.0.7
++ Added check for brute force postgreSQL passwords as a local service.
 + Added pprof (is a tool for visualization and analysis of profiling data)
 + Added tests for the validator
 

@@ -11,7 +11,10 @@ func CheckIp(target string) (end string, err error) {
 
 	target = regexp.MustCompile(`((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}`).FindString(target)
 
-	if target != "" && target[0] != '0' && target[len(target)-1] != '0' {
+	if target != "" && target[0] != '0' {
+		if target[len(target)-1] == '0' && target[len(target)-2] == '.' {
+			return "", err
+		}
 
 		whiteAddress := osUtil.GetLocalIPs()
 		whiteAddress = append(whiteAddress, config.Get().WhiteList...)
