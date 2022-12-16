@@ -17,7 +17,7 @@ func main() {
 	commandLine.Run()
 	firewall.WorkerStart(config.Get().Flags.RunAsDaemon)
 	//fakeSocks.Listen(config.Get().FakeSocksPorts)
-	//REST.Start(config.Get().Flags.RunAsDaemon) //TODO validator check port
+	//REST.Start(config.Get().Flags.RunAsDaemon)
 	gRPC.Start(config.Get().Flags.RunAsDaemon)
 	localService.WorkerStart(config.Get().Services, pprofEnd)
 }

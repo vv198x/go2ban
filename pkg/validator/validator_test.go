@@ -56,7 +56,7 @@ func TestBadlIP212(t *testing.T) {
 }
 
 func TestBadlIPZero(t *testing.T) {
-	ip, err := CheckIp("212.354.254.0")
+	ip, err := CheckIp("212.254.254.0")
 	if ip != "" {
 		t.Errorf("\nReturn ip:%s, err:%s", ip, err)
 	} else {
@@ -85,9 +85,19 @@ func TestBadlIP312(t *testing.T) {
 	}
 }
 
-func TestGoodIPendText(t *testing.T) {
-	ip, err := CheckIp("212.254.254.254TEXT")
-	if ip != "212.254.254.254" {
+func TestFindSSHD(t *testing.T) {
+	ip, err := CheckIp(`Dec 14 23:54:25 hostname sshd[14105]: Failed password for root from 123.123.123.123 port 47138 ssh2`)
+	if ip != "123.123.123.123" {
+		t.Errorf("\nReturn ip:%s, err:%s", ip, err)
+	} else {
+		fmt.Println("Validator say error: ", err)
+		fmt.Println("Validator say ip: ", ip)
+	}
+}
+
+func TestFindPGsql(t *testing.T) {
+	ip, err := CheckIp(`{"log":"2022-12-16 10:17:20.246 UTC [29]   pgsql @pgdb 123.123.123.123 - FATAL:  password authentication failed for user \"pgsql\"\n","stream":"stderr","time":"2022-12-16T10:17:20.247459026Z"}`)
+	if ip != "123.123.123.123" {
 		t.Errorf("\nReturn ip:%s, err:%s", ip, err)
 	} else {
 		fmt.Println("Validator say error: ", err)
