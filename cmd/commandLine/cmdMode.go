@@ -1,6 +1,7 @@
 package commandLine
 
 import (
+	"context"
 	"fmt"
 	"go2ban/cmd/firewall"
 	"go2ban/pkg/config"
@@ -9,7 +10,7 @@ import (
 func Run() {
 	switch {
 	case config.Get().Flags.UnlockAll:
-		blockedIp, err := firewall.UnlockAll()
+		blockedIp, err := firewall.UnlockAll(context.Background())
 		if err != nil {
 			if blockedIp == 0 {
 				fmt.Println(err)

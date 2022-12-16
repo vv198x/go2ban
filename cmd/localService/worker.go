@@ -14,7 +14,7 @@ import (
 
 const nameMapFile = "endBytesMap"
 
-func WorkerStart(services []config.Service) {
+func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 	if config.Get().Flags.RunAsDaemon == false {
 		return
 	}
@@ -53,7 +53,9 @@ func WorkerStart(services []config.Service) {
 				if err != nil {
 					log.Printf("Save endBytesMap to file %s, err:%s", saveMapFile, err.Error())
 				}
-
+				if pprofEnd != nil {
+					pprofEnd.Stop()
+				}
 				os.Exit(2)
 			}
 		}

@@ -52,7 +52,7 @@ func workerIptables() {
 	}()
 }
 
-func iptablesUnlockAll() (ips int, err error) {
+func iptablesUnlockAll(ctx context.Context) (ips int, err error) {
 	ips = countBlocked()
 	err = runCMD(`iptables --table raw --flush go2ban`)
 	if err != nil && err.Error() != "exit status 1" {

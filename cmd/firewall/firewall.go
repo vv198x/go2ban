@@ -14,18 +14,21 @@ func BlockIP(ctx context.Context, ip string) {
 	case "iptables":
 		iptablesBlock(ctx, ip)
 	}
+	start := time.Now()
 	go func() {
 		select {
+		case <-ctx.Done():
+			log.Println("Blocked in ", time.Since(start).Microseconds(), ctx.Err())
 		case <-time.After(50 * time.Microsecond):
 			log.Println("* Runs longer than usual *")
 		}
 	}()
 }
 
-func UnlockAll() (blockedIp int, err error) {
+func UnlockAll(ctx context.Context) (blockedIp int, err error) {
 	switch config.Get().Firewall {
 	case "iptables":
-		return iptablesUnlockAll()
+		return iptablesUnlockAll(ctx)
 	}
 	return
 }
