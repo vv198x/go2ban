@@ -20,5 +20,4 @@ func main() {
 	//REST.Start(config.Get().Flags.RunAsDaemon) //TODO validator check port
 	gRPC.Start(config.Get().Flags.RunAsDaemon)
 	localService.WorkerStart(config.Get().Services, pprofEnd)
-
 }

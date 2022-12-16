@@ -13,6 +13,9 @@ func Load() {
 	if syscall.Getegid() != 0 {
 		log.Fatalln("Only the root user is allowed to run")
 	}
+
+	readFlags()
+
 	if !osUtil.CheckFile(exportCfg.Flags.ConfigFile) {
 		log.Fatalln("Config file not found")
 	}

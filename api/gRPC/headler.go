@@ -22,7 +22,6 @@ func (s *Server) IP(ctx context.Context, in *IPStringRequest) (*OKReply, error) 
 	} else {
 		log.Println("gRPC validator:", err)
 	}
-
 	ctx.Done()
 	return &OKReply{Ok: false}, err
 }

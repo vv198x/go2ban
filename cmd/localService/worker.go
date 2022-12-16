@@ -49,7 +49,7 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 			case <-ctx.Done():
 				stop()
 
-				err = endBytesMap.WriteToFile(saveMapFile) //TODO on
+				err = endBytesMap.WriteToFile(saveMapFile)
 				if err != nil {
 					log.Printf("Save endBytesMap to file %s, err:%s", saveMapFile, err.Error())
 				}
@@ -57,6 +57,8 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 					pprofEnd.Stop()
 				}
 				os.Exit(2)
+			default:
+				time.Sleep(time.Second)
 			}
 		}
 	}()

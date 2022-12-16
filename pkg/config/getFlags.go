@@ -8,7 +8,7 @@ type flags struct {
 	ConfigFile  string
 }
 
-func init() {
+func readFlags() {
 	cfgFile := String("cfgFile", defaultCfgFile, "Path to file go2ban.conf")
 	daemon := Bool("d", defaultRunDaemon, "Run as daemon")
 	clear := Bool("clear", false, "Unlock all")
