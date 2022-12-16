@@ -1,5 +1,5 @@
 #!/usr/bin/sh
 grpcurl -plaintext -proto 2ban.proto \
-    -d '{"ip": "127.0.0.2:1"}' \
+    -d '{"ip": "127.0.0.2:FAIL"}' \
     127.0.0.1:2048\
     IP2ban.IP

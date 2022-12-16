@@ -49,7 +49,7 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 			case <-ctx.Done():
 				stop()
 
-				err = endBytesMap.WriteToFile(saveMapFile)
+				err = endBytesMap.WriteToFile(saveMapFile) //TODO on
 				if err != nil {
 					log.Printf("Save endBytesMap to file %s, err:%s", saveMapFile, err.Error())
 				}

@@ -39,7 +39,7 @@ func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap
 
 	endBytesMap.Save(service.LogFile, endByte+int64(readB))
 
-	log.Printf("Bytes read %d of filesize %d\n", readB, f.Size()) //TODO del
+	log.Printf("Bytes read %d of filesize %d, file: %s\n", readB, f.Size(), f.Name()) //TODO del
 
 	findBytes := []byte(service.Regxp)
 	if bytes.Contains(buf, findBytes) {
@@ -47,6 +47,7 @@ func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap
 			if !bytes.Contains(bySt, findBytes) {
 				continue
 			}
+
 			ip, err := validator.CheckIp(string(bySt))
 
 			if err == nil {
