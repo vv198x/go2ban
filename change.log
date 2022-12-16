@@ -23,4 +23,5 @@ Response on json {"ok":false,"message":"This is local ip: 127.0.0.1"} 400
 0.0.6
 + Added check for brute force sshd passwords as a local service.
 Reading logs of local services, not from the beginning of the file, but from the last stop.
+next 0.0.7 pprof prifile cpu mem
 
