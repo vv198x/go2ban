@@ -111,7 +111,7 @@ func TestRandom1000(t *testing.T) {
 	for i := 0; i < 1000; i++ {
 		rand.Seed(time.Now().UTC().UnixNano())
 		rndip := fmt.Sprintf("%d.%d.%d.%d",
-			1+rand.Intn(255-1), 1+rand.Intn(255-0), 1+rand.Intn(255-0), 1+rand.Intn(255-1))
+			1+rand.Intn(255-1), 0+rand.Intn(255-0), 0+rand.Intn(255-0), 1+rand.Intn(254-1))
 		//fmt.Println(rndip)
 		ip, err := CheckIp(rndip)
 		if ip != rndip {
