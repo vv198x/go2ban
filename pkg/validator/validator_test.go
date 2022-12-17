@@ -7,6 +7,18 @@ import (
 	"time"
 )
 
+func TestRandom1000(t *testing.T) {
+	for i := 0; i < 1000; i++ {
+		rand.Seed(time.Now().UTC().UnixNano())
+		rndip := fmt.Sprintf("%d.%d.%d.%d",
+			1+rand.Intn(255-1), 0+rand.Intn(255-0), 0+rand.Intn(255-0), 1+rand.Intn(254-1))
+		//fmt.Println(rndip)
+		ip, err := CheckIp(rndip)
+		if ip != rndip {
+			t.Errorf("\nReturn ip:%s, err:%s", ip, err)
+		}
+	}
+}
 func TestGoodIP(t *testing.T) {
 	ip, err := CheckIp("127.0.0.2")
 	if ip != "127.0.0.2" {
@@ -104,18 +116,5 @@ func TestFindPGsql(t *testing.T) {
 	} else {
 		fmt.Println("Validator say error: ", err)
 		fmt.Println("Validator say ip: ", ip)
-	}
-}
-
-func TestRandom1000(t *testing.T) {
-	for i := 0; i < 1000; i++ {
-		rand.Seed(time.Now().UTC().UnixNano())
-		rndip := fmt.Sprintf("%d.%d.%d.%d",
-			1+rand.Intn(255-1), 0+rand.Intn(255-0), 0+rand.Intn(255-0), 1+rand.Intn(254-1))
-		//fmt.Println(rndip)
-		ip, err := CheckIp(rndip)
-		if ip != rndip {
-			t.Errorf("\nReturn ip:%s, err:%s", ip, err)
-		}
 	}
 }

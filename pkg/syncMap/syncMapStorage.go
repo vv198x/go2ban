@@ -26,8 +26,8 @@ func (c *storageMap) Load(key string) int64 {
 }
 
 func (c *storageMap) Save(key string, v int64) {
-	c.mx.RLock()
-	defer c.mx.RUnlock()
+	c.mx.Lock()
+	defer c.mx.Unlock()
 
 	c.m[key] = v
 }
@@ -35,6 +35,7 @@ func (c *storageMap) Save(key string, v int64) {
 func (c *storageMap) ReadFromFile(fileMap string) error {
 	c.mx.RLock()
 	defer c.mx.RUnlock()
+
 	buf, err := ioutil.ReadFile(fileMap)
 	if err == nil {
 

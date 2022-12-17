@@ -9,7 +9,7 @@ import (
 func Start(runAsDaemon bool) {
 	if runAsDaemon {
 		go func() {
-
+			//TODO check port
 			err := http.ListenAndServe(":"+config.Get().RestPort, nil)
 
 			if err != nil {

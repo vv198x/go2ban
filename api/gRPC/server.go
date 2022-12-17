@@ -11,6 +11,7 @@ import (
 func Start(runAsDaemon bool) {
 	if runAsDaemon {
 		go func() {
+			//TODO check port
 			split := strings.Split(config.Get().GrpcPort, "/") //2048/tcp
 			if len(split) > 1 {
 				lis, err := net.Listen(split[1], ":"+split[0])
