@@ -15,7 +15,7 @@ fake_socks_ports=21 3389 #default off
 {
   "Service":[
     {"On":true,"Name":"sshd_cent","Regxp": "Failed password","LogFile":"/var/log/secure"},
-    {"On":false,"Name":"postree11","Regxp": "","LogFile":"root"}
+    {"On":false,"Name":"postree11_local","Regxp": "password authentication failed","LogFile":"/var/log/go2ban/test.pg"}
   ]
 }
 ```
