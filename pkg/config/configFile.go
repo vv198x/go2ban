@@ -36,20 +36,29 @@ func Load() {
 		splitSt := Split(line, "=")
 		if line[0] != byte('#') && len(splitSt) > 0 {
 
+			if line == "{" {
+				for _, jsonSt := range cfgSt[i:] {
+					jsonData = append(jsonData, jsonSt[:]...)
+				}
+				break
+			}
+
+			params := Fields(splitSt[1])
+
 			switch splitSt[0] {
 			case "grpc_port":
-				exportCfg.GrpcPort = Fields(splitSt[1])[0]
+				exportCfg.GrpcPort = params[0]
 			case "rest_port":
-				exportCfg.RestPort = Fields(splitSt[1])[0]
+				exportCfg.RestPort = params[0]
 
 			case "blocked_ips":
-				toInt, err := strconv.Atoi(Fields(splitSt[1])[0])
+				toInt, err := strconv.Atoi(params[0])
 				if err == nil {
 					exportCfg.BlockedIps = toInt
 				}
 
 			case "log_dir":
-				exportCfg.LogDir = Fields(splitSt[1])[0]
+				exportCfg.LogDir = params[0]
 
 			case "firewall":
 				if Contains(splitSt[1], "auto") {
@@ -61,14 +70,14 @@ func Load() {
 					}
 					exportCfg.Firewall = firewallName
 				} else {
-					exportCfg.Firewall = Fields(splitSt[1])[0]
+					exportCfg.Firewall = params[0]
 				}
 
 			case "white_list":
-				exportCfg.WhiteList = Fields(splitSt[1])
+				exportCfg.WhiteList = params
 
 			case "fake_socks_ports":
-				bufPorts := Fields(splitSt[1])
+				bufPorts := params
 				for _, port := range bufPorts {
 					portInt, err := strconv.Atoi(port)
 					if err == nil {
@@ -76,31 +85,24 @@ func Load() {
 					}
 				}
 			case "fake_socks_fails":
-				fails, err := strconv.Atoi(splitSt[1])
+				fails, err := strconv.Atoi(params[0])
 				if err == nil {
 					exportCfg.FakeSocksFails = fails
 				}
 
 			case "local_service_check_minutes":
-				minutes, err := strconv.Atoi(splitSt[1])
+				minutes, err := strconv.Atoi(params[0])
 				if err == nil {
-					exportCfg.FakeSocksFails = minutes
+					exportCfg.ServiceCheckMinutes = minutes
 				}
 			case "local_service_fails":
-				fails, err := strconv.Atoi(splitSt[1])
+				fails, err := strconv.Atoi(params[0])
 				if err == nil {
-					exportCfg.FakeSocksFails = fails
+					exportCfg.ServiceFails = fails
 				}
 			}
 		}
 
-		if line == "{" {
-			for _, jsonSt := range cfgSt[i:] {
-				jsonData = append(jsonData, jsonSt[:]...)
-			}
-
-			break
-		}
 	}
 	if len(jsonData) > 0 {
 		err = json.Unmarshal(jsonData, &exportCfg)

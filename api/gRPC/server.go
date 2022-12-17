@@ -19,6 +19,7 @@ func Start(runAsDaemon bool) {
 				RegisterIP2BanServer(s, &Server{})
 
 				err = s.Serve(lis)
+
 				if err != nil {
 					log.Fatalln("gRPC error ", err)
 				}
