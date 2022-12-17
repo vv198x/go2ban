@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	pprofEnd := proFile.Start("mem")
+	pprofEnd := proFile.Start("nope")
 	config.Load()
 	logger.Start()
 	commandLine.Run()
