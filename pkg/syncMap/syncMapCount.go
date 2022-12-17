@@ -1,15 +1,17 @@
 package syncMap
 
-import "sync"
+import (
+	"sync"
+)
 
 type counters struct {
 	mx sync.RWMutex
-	m  map[string]uint8 //255
+	m  map[string]uint
 }
 
 func NewCountersMap() *counters {
 	return &counters{
-		m: make(map[string]uint8),
+		m: make(map[string]uint),
 	}
 }
 
@@ -24,7 +26,6 @@ func (c *counters) Load(key string) int64 {
 func (c *counters) Increment(key string) {
 	c.mx.Lock()
 	defer c.mx.Unlock()
-
 	c.m[key]++
 }
 

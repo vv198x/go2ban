@@ -28,6 +28,7 @@ Reading logs of local services, not from the beginning of the file, but from the
 + Added pprof (is a tool for visualization and analysis of profiling data)
 + Added tests for the validator
 0.0.8
-+ Fix bug in SyncMap
-+ Fix bug
++ Fixed bug in SyncMap
++ Fixed bug reading config file
++ Fixed bug "Duble block"
 

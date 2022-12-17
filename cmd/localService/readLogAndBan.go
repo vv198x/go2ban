@@ -3,12 +3,14 @@ package localService
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"go2ban/cmd/firewall"
 	"go2ban/pkg/config"
 	"go2ban/pkg/syncMap"
 	"go2ban/pkg/validator"
 	"log"
 	"os"
+	"time"
 )
 
 func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap, endBytesMap syncMap.SyncMap) {
@@ -20,7 +22,7 @@ func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap
 	}
 	defer file.Close()
 	var startByte int64
-
+	start := time.Now() //TODO del
 	endByte := endBytesMap.Load(service.LogFile)
 
 	if endByte <= f.Size() {
@@ -39,26 +41,31 @@ func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap
 
 	endBytesMap.Save(service.LogFile, endByte+int64(readB))
 
-	log.Printf("Bytes read %d of filesize %d, file: %s\n", readB, f.Size(), f.Name()) //TODO del
-
 	findBytes := []byte(service.Regxp)
-	if bytes.Contains(buf, findBytes) {
-		for _, bySt := range bytes.Split(buf, []byte{'\n'}) {
-			if !bytes.Contains(bySt, findBytes) {
-				continue
+
+	for _, bySt := range bytes.Split(buf, []byte{'\n'}) {
+		if !bytes.Contains(bySt, findBytes) {
+			continue
+		}
+
+		ip, err := validator.CheckIp(string(bySt))
+
+		if err == nil {
+			countFailsMap.Increment(ip)
+			count := int(countFailsMap.Load(ip))
+			if count == 4 {
+				fmt.Println(ip)
 			}
+			if count == config.Get().ServiceFails {
 
-			ip, err := validator.CheckIp(string(bySt))
+				go firewall.BlockIP(ctx, ip)
 
-			if err == nil {
-				countFailsMap.Increment(ip)
-				if int(countFailsMap.Load(ip))+1 == config.Get().ServiceFails {
-
-					go firewall.BlockIP(ctx, ip)
-
-					log.Printf("Block localservice: %s ip: %s", service.Name, ip)
-				}
+				//fmt.Println(ip, count)
+				log.Printf("Block localservice: %s ip: %s", service.Name, ip)
 			}
 		}
 	}
+
+	log.Printf("Bytes read %d of filesize %d, file: %s\n, on second %.4f", readB, f.Size(), f.Name(),
+		time.Since(start).Seconds()) //TODO del
 }

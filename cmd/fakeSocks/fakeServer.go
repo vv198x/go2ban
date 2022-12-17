@@ -2,7 +2,6 @@ package fakeSocks
 
 import (
 	"context"
-	"fmt"
 	"go2ban/cmd/firewall"
 	"go2ban/pkg/config"
 	"go2ban/pkg/syncMap"
@@ -10,6 +9,7 @@ import (
 	"log"
 	"net"
 	"strconv"
+	"time"
 )
 
 func Listen(ports []int) {
@@ -33,27 +33,31 @@ func Listen(ports []int) {
 
 			for {
 				conn, err := listener.Accept()
-				defer conn.Close()
 				if err != nil {
-					fmt.Println("Fake socks listener", p, err)
+					log.Fatalln("Fake socks listener", p, err)
 					continue
 				}
 
 				ip, err := validator.CheckIp(conn.RemoteAddr().String())
 				if err != nil {
 					log.Println("Fake socks error addr", p, err)
+					conn.Close()
 					continue
 				}
 
 				func(counterMap syncMap.SyncMap) {
 					counterMap.Increment(ip)
-					if int(counterMap.Load(ip))+1 == config.Get().FakeSocksFails {
+					count := int(counterMap.Load(ip))
+					if count == config.Get().FakeSocksFails {
 
 						go firewall.BlockIP(context.Background(), ip)
 
 						log.Println("Fake socks ip bloked:", ip)
 					}
 				}(countMap)
+
+				time.Sleep(time.Second)
+				conn.Close()
 			}
 		}()
 	}
