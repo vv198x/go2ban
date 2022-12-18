@@ -6,4 +6,5 @@ type SyncMap interface {
 	Save(key string, v int64)
 	ReadFromFile(fileMap string) error
 	WriteToFile(fileMap string) error
+	Close()
 }

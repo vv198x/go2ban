@@ -22,8 +22,8 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
-	countFailsMap := storage.NewCountersMap()
-	endBytesMap := storage.NewStorageMap()
+	countFailsMap := storage.NewRedis()
+	endBytesMap := storage.NewRedis()
 
 	saveMapFile := filepath.Join(config.Get().LogDir, nameMapFile)
 	err := endBytesMap.ReadFromFile(saveMapFile)
@@ -53,6 +53,10 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 				if err != nil {
 					log.Printf("Save endBytesMap to file %s, err:%s", saveMapFile, err.Error())
 				}
+
+				countFailsMap.Close()
+				endBytesMap.Close()
+
 				if pprofEnd != nil {
 					pprofEnd.Stop()
 				}

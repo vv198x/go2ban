@@ -29,7 +29,7 @@ func Listen(ports []int) {
 			log.Println("Fake socks open port", p)
 			defer listener.Close()
 
-			countMap := storage.NewCountersMap()
+			countMap := storage.NewRedis()
 
 			for {
 				conn, err := listener.Accept()
@@ -59,6 +59,7 @@ func Listen(ports []int) {
 				time.Sleep(time.Second)
 				conn.Close()
 			}
+			countMap.Close()
 		}()
 	}
 }

@@ -57,3 +57,6 @@ func (c *storageMap) WriteToFile(fileMap string) error {
 
 func (c *storageMap) Increment(key string) {
 }
+
+func (c *storageMap) Close() {
+}

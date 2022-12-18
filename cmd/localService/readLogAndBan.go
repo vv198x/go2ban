@@ -3,7 +3,6 @@ package localService
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"go2ban/cmd/firewall"
 	"go2ban/pkg/config"
 	"go2ban/pkg/storage"
@@ -53,14 +52,10 @@ func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap
 		if err == nil {
 			countFailsMap.Increment(ip)
 			count := int(countFailsMap.Load(ip))
-			if count == 4 {
-				fmt.Println(ip)
-			}
 			if count == config.Get().ServiceFails {
 
 				go firewall.BlockIP(ctx, ip)
 
-				//fmt.Println(ip, count)
 				log.Printf("Block localservice: %s ip: %s", service.Name, ip)
 			}
 		}
