@@ -31,4 +31,8 @@ Reading logs of local services, not from the beginning of the file, but from the
 + Fixed bug in SyncMap
 + Fixed bug reading config file
 + Fixed bug "Duble block"
++ Faster reading from a file
++ Added timeout connection
+0.0.9
++ Removed regxp validation for ip. Searching for ip in a string is 20% faster
 

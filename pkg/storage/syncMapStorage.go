@@ -1,4 +1,4 @@
-package syncMap
+package storage
 
 import (
 	"encoding/json"

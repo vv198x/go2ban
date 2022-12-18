@@ -3,7 +3,7 @@ package localService
 import (
 	"context"
 	"go2ban/pkg/config"
-	"go2ban/pkg/syncMap"
+	"go2ban/pkg/storage"
 	"log"
 	"os"
 	"os/signal"
@@ -22,8 +22,8 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
-	countFailsMap := syncMap.NewCountersMap()
-	endBytesMap := syncMap.NewStorageMap()
+	countFailsMap := storage.NewCountersMap()
+	endBytesMap := storage.NewStorageMap()
 
 	saveMapFile := filepath.Join(config.Get().LogDir, nameMapFile)
 	err := endBytesMap.ReadFromFile(saveMapFile)

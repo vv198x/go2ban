@@ -6,14 +6,14 @@ import (
 	"fmt"
 	"go2ban/cmd/firewall"
 	"go2ban/pkg/config"
-	"go2ban/pkg/syncMap"
+	"go2ban/pkg/storage"
 	"go2ban/pkg/validator"
 	"log"
 	"os"
 	"time"
 )
 
-func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap, endBytesMap syncMap.SyncMap) {
+func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap, endBytesMap storage.SyncMap) {
 	file, err := os.Open(service.LogFile)
 	f, err := file.Stat()
 	if err != nil {
@@ -22,7 +22,7 @@ func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap
 	}
 	defer file.Close()
 	var startByte int64
-	start := time.Now() //TODO del
+	start := time.Now() //todo del
 	endByte := endBytesMap.Load(service.LogFile)
 
 	if endByte <= f.Size() {
@@ -67,5 +67,5 @@ func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap
 	}
 
 	log.Printf("Bytes read %d of filesize %d, file: %s\n, on second %.4f", readB, f.Size(), f.Name(),
-		time.Since(start).Seconds()) //TODO del
+		time.Since(start).Seconds()) //todo del
 }

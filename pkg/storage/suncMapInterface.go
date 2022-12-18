@@ -1,4 +1,4 @@
-package syncMap
+package storage
 
 type SyncMap interface {
 	Load(key string) int64

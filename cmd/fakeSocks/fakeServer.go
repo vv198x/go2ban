@@ -4,7 +4,7 @@ import (
 	"context"
 	"go2ban/cmd/firewall"
 	"go2ban/pkg/config"
-	"go2ban/pkg/syncMap"
+	"go2ban/pkg/storage"
 	"go2ban/pkg/validator"
 	"log"
 	"net"
@@ -29,7 +29,7 @@ func Listen(ports []int) {
 			log.Println("Fake socks open port", p)
 			defer listener.Close()
 
-			countMap := syncMap.NewCountersMap()
+			countMap := storage.NewCountersMap()
 
 			for {
 				conn, err := listener.Accept()
@@ -45,7 +45,7 @@ func Listen(ports []int) {
 					continue
 				}
 
-				func(counterMap syncMap.SyncMap) {
+				func(counterMap storage.SyncMap) {
 					counterMap.Increment(ip)
 					count := int(counterMap.Load(ip))
 					if count == config.Get().FakeSocksFails {
