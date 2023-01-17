@@ -57,7 +57,7 @@ func iptablesUnlockAll(ctx context.Context) (ips int, err error) {
 	err = runCMD(`iptables --table raw --flush go2ban`)
 	if err != nil && err.Error() != "exit status 1" {
 		log.Println("Don't del list ", err)
-		return 0, errors.New("Not found chain go2ban")
+		return 0, errors.New("not found chain go2ban")
 	}
 	log.Println("Iptables: clear all")
 	return

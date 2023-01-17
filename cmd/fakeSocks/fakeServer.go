@@ -13,7 +13,7 @@ import (
 )
 
 func Listen(ports []int) {
-	if config.Get().Flags.RunAsDaemon == false {
+	if !config.Get().Flags.RunAsDaemon {
 		return
 	}
 
@@ -40,7 +40,7 @@ func Listen(ports []int) {
 
 				ip, err := validator.CheckIp(conn.RemoteAddr().String())
 				if err != nil {
-					log.Println("Fake socks error addr", p, err)
+					log.Println("Fake socks error addr ", p, err)
 					conn.Close()
 					continue
 				}
