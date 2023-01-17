@@ -9,7 +9,7 @@ import (
 	"go2ban/cmd/localService"
 	"go2ban/pkg/config"
 	"go2ban/pkg/logger"
-	"go2ban/pkg/proFile"
+	"go2ban/pkg/profile"
 )
 
 func main() {

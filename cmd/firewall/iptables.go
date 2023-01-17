@@ -72,8 +72,7 @@ func countBlocked() (ips int) {
 }
 
 func runCMD(firewallCMD string) error {
-	err := exec.Command("sh", "-c", firewallCMD).Run()
-	return err
+	return exec.Command("sh", "-c", firewallCMD).Run()
 }
 
 func runOutputCMD(firewallCMD string) ([]byte, error) {

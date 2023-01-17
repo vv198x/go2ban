@@ -12,7 +12,7 @@ func TestRandom1000(t *testing.T) {
 		rand.Seed(time.Now().UTC().UnixNano())
 		rndip := fmt.Sprintf("%d.%d.%d.%d",
 			1+rand.Intn(255-1), 0+rand.Intn(255-0), 0+rand.Intn(255-0), 1+rand.Intn(254-1))
-		//fmt.Println(rndip)
+
 		ip, err := CheckIp(rndip)
 		if ip != rndip {
 			t.Errorf("\nReturn ip:%s, err:%s", ip, err)
@@ -111,6 +111,15 @@ func TestFindSSHD(t *testing.T) {
 
 func TestFindPGsql(t *testing.T) {
 	ip, err := CheckIp(`{"log":"2022-12-16 10:17:20.246 UTC [29]   pgsql @pgdb 123.123.123.123 - FATAL:  password authentication failed for user \"pgsql\"\n","stream":"stderr","time":"2022-12-16T10:17:20.247459026Z"}`)
+	if ip != "123.123.123.123" {
+		t.Errorf("\nReturn ip:%s, err:%s", ip, err)
+	} else {
+		fmt.Println("Validator say error: ", err)
+		fmt.Println("Validator say ip: ", ip)
+	}
+}
+func TestFindShandowSocks(t *testing.T) {
+	ip, err := CheckIp(`{"log":" 2023-01-04 22:12:52 ERROR: failed to handshake with 123.123.123.123: authentication error\n","stream":"stderr","time":"2023-01-04T22:12:52.884943228Z"}`)
 	if ip != "123.123.123.123" {
 		t.Errorf("\nReturn ip:%s, err:%s", ip, err)
 	} else {

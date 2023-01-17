@@ -1,15 +1,12 @@
 package osUtil
 
 import (
-	"log"
 	"net"
-	"os"
 )
 
 func GetLocalIPs() (end []string) {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
-		log.Fatalln("It's impossible error")
 		return
 	}
 	for _, address := range addrs {
@@ -20,13 +17,4 @@ func GetLocalIPs() (end []string) {
 
 	}
 	return
-}
-
-func GetLocalHostname() string {
-	hostname, err := os.Hostname()
-	if err != nil {
-		log.Println("No get localhostname ", err)
-		return ""
-	}
-	return hostname
 }

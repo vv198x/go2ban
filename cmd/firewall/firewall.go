@@ -18,7 +18,7 @@ func BlockIP(ctx context.Context, ip string) {
 	go func() {
 		select {
 		case <-ctx.Done():
-			log.Println("Blocked in ", time.Since(start).Microseconds(), ctx.Err())
+			log.Println("Blocked in microseconds :", time.Since(start).Microseconds())
 		case <-time.After(50 * time.Microsecond):
 			log.Println("* Runs longer than usual *")
 		}
@@ -41,13 +41,3 @@ func WorkerStart(RunAsDaemon bool) {
 		}
 	}
 }
-
-/*
-func TmpTest() {
-	for i := 0; i < 20000; i++ {
-		rand.Seed(time.Now().UTC().UnixNano())
-		iptablesBlock(context.Background(), fmt.Sprintf("%d.%d.%d.%d",
-			1+rand.Intn(255-1), 1+rand.Intn(255-1), 1+rand.Intn(255-1), 1+rand.Intn(255-1)))
-	}
-}
-*/

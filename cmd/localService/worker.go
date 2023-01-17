@@ -3,6 +3,7 @@ package localService
 import (
 	"context"
 	"go2ban/pkg/config"
+	"go2ban/pkg/docker"
 	"go2ban/pkg/storage"
 	"log"
 	"os"
@@ -18,7 +19,7 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 	if config.Get().Flags.RunAsDaemon == false {
 		return
 	}
-
+	//Контекст для, получение сигнала выхода, сохранить мапу в файл
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
@@ -35,8 +36,20 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 		for {
 			for _, service := range services {
 				if service.On {
+					//Если в лог в докере получаем суслог всех рабочих контейнеров
+					if service.LogFile == "docker" {
+						dockerSysLogs, errD := docker.GetListsSyslogFiles()
+						if errD == nil {
+							for _, f := range dockerSysLogs {
+								service.LogFile = f
 
-					go checkLogAndBlock(ctx, service, countFailsMap, endBytesMap)
+								go checkLogAndBlock(ctx, service, countFailsMap, endBytesMap)
+							}
+						}
+					} else {
+
+						go checkLogAndBlock(ctx, service, countFailsMap, endBytesMap)
+					}
 				}
 			}
 			time.Sleep(sleepMinutes)
