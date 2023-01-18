@@ -35,4 +35,5 @@ Reading logs of local services, not from the beginning of the file, but from the
 + Added timeout connection
 0.0.9
 + Removed regxp validation for ip. Searching for ip in a string is 20% faster
-
+0.1.0
++ Lint check

@@ -5,7 +5,7 @@ import (
 	"go2ban/pkg/osUtil"
 	"log"
 	"strconv"
-	. "strings"
+	"strings"
 	"syscall"
 )
 
@@ -33,7 +33,7 @@ func Load() {
 	jsonData := []byte{}
 
 	for i, line := range cfgSt {
-		splitSt := Split(line, "=")
+		splitSt := strings.Split(line, "=")
 		if line[0] != byte('#') && len(splitSt) > 0 {
 
 			if line == "{" {
@@ -43,7 +43,7 @@ func Load() {
 				break
 			}
 
-			params := Fields(splitSt[1])
+			params := strings.Fields(splitSt[1])
 
 			switch splitSt[0] {
 			case "grpc_port":
@@ -61,9 +61,9 @@ func Load() {
 				exportCfg.LogDir = params[0]
 
 			case "firewall":
-				if Contains(splitSt[1], "auto") {
+				if strings.Contains(splitSt[1], "auto") {
 					firewallName := whatFirewall()
-					cfgSt[i] = Join([]string{splitSt[0], firewallName}, "=")
+					cfgSt[i] = strings.Join([]string{splitSt[0], firewallName}, "=")
 					err = osUtil.WriteStrsFile(cfgSt, exportCfg.Flags.ConfigFile)
 					if err != nil {
 						log.Println("Cant overwrite config file", err)

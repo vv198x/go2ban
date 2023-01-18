@@ -4,7 +4,13 @@ After=network.target
 
 [Service]
 Type=simple
+User=root
 ExecStart=/usr/local/bin/go2ban -d
+Restart=always
+TimeoutStartSec=120s
+Environment=GO2BAN_LOG_DIR=/var/log/go2ban
+StandardOutput=file:/var/log/go2ban/go2ban.log
+StandardError=file:/var/log/go2ban/go2ban.err
 
 [Install]
 WantedBy=multi-user.target

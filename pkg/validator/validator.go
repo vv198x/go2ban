@@ -36,7 +36,7 @@ func CheckIp(target string) (end string, err error) {
 		return target, nil
 
 	}
-	return "", errors.New("Wrong ip")
+	return "", errors.New("wrong ip")
 }
 
 /*

@@ -1,0 +1,51 @@
+openapi: 3.0.0
+info:
+  title: Block IP API
+  version: 1.0.0
+servers:
+  - url: /
+paths:
+  /:
+    post:
+      summary: Block an IP address
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                ip:
+                  type: string
+                  description: IP address to block
+                  example: "192.168.1.1"
+      responses:
+        200:
+          description: IP address blocked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sayOk'
+                example:
+                  ok: true
+                  message: Ip blocked 192.168.1.1
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sayOk'
+                example:
+                  ok: false
+                  message: Bad Request
+components:
+  schemas:
+    sayOk:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Ip blocked 192.168.1.1
