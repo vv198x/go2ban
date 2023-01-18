@@ -36,11 +36,9 @@ func BenchmarkIptablesBlock(b *testing.B) {
 	})
 }
 
-func BenchmarkWorkerIptables(b *testing.B) {
+func BenchmarkIptablesUnlockAll(b *testing.B) {
 	b.Run("1 iteration", func(b *testing.B) {
-		for n := 0; n < b.N; n++ {
-			workerIptables()
-		}
+		iptablesUnlockAll(context.Background())
 	})
 }
 
