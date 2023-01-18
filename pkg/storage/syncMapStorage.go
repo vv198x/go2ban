@@ -2,7 +2,7 @@ package storage
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"sync"
 )
 
@@ -21,7 +21,7 @@ func (c *storageMap) Load(key string) int64 {
 	c.mx.RLock()
 	defer c.mx.RUnlock()
 
-	val, _ := c.m[key]
+	val := c.m[key]
 	return val
 }
 
@@ -36,11 +36,25 @@ func (c *storageMap) ReadFromFile(fileMap string) error {
 	c.mx.RLock()
 	defer c.mx.RUnlock()
 
-	buf, err := ioutil.ReadFile(fileMap)
-	if err == nil {
-
-		err = json.Unmarshal(buf, &c.m)
+	f, err := os.Open(fileMap)
+	if err != nil {
+		return err
 	}
+	defer f.Close()
+
+	fileInfo, err := os.Stat(fileMap)
+	if err != nil {
+		return err
+	}
+
+	buf := make([]byte, fileInfo.Size())
+	_, err = f.Read(buf)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(buf, &c.m)
+
 	return err
 }
 func (c *storageMap) WriteToFile(fileMap string) error {
@@ -50,7 +64,17 @@ func (c *storageMap) WriteToFile(fileMap string) error {
 	buf, err := json.Marshal(c.m)
 	if err == nil {
 
-		err = ioutil.WriteFile(fileMap, buf, 0644)
+		f, errF := os.OpenFile(fileMap, os.O_WRONLY|os.O_CREATE, 0644)
+		if errF != nil {
+			return errF
+		}
+		defer f.Close()
+
+		_, errF = f.Write(buf)
+		if errF != nil {
+			return errF
+		}
+
 	}
 	return err
 }

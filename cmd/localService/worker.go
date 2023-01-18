@@ -16,7 +16,7 @@ import (
 const nameMapFile = "endBytesMap"
 
 func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
-	if config.Get().Flags.RunAsDaemon == false {
+	if !config.Get().Flags.RunAsDaemon {
 		return
 	}
 	//Контекст для, получение сигнала выхода, сохранить мапу в файл

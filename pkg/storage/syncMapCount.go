@@ -19,7 +19,7 @@ func (c *counters) Load(key string) int64 {
 	c.mx.RLock()
 	defer c.mx.RUnlock()
 
-	val, _ := c.m[key]
+	val := c.m[key]
 	return int64(val)
 }
 

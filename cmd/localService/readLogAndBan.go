@@ -13,9 +13,9 @@ import (
 )
 
 func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap, endBytesMap storage.SyncMap) {
-	file, err := os.Open(service.LogFile)
+	file, errO := os.Open(service.LogFile)
 	f, err := file.Stat()
-	if err != nil {
+	if (err != nil) && (errO != nil) {
 		log.Println("Local service, can't open log file ", err)
 		return
 	}

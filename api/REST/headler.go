@@ -25,7 +25,9 @@ func getIp(writer http.ResponseWriter, request *http.Request) {
 
 	if request.Method != http.MethodPost || ip == "" {
 		writer.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(writer).Encode(sayOk{Message: "Bad Request"})
+		if errJ := json.NewEncoder(writer).Encode(sayOk{Message: "Bad Request"}); errJ != nil {
+			log.Println(errJ)
+		}
 		log.Println("REST Bad Request", request.Method, request.URL)
 		return
 	}
@@ -33,14 +35,19 @@ func getIp(writer http.ResponseWriter, request *http.Request) {
 	ip, err := validator.CheckIp(ip)
 	if err != nil {
 		writer.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(writer).Encode(sayOk{Message: err.Error()})
-		log.Println("REST validator:", err)
-	} else {
-
-		go firewall.BlockIP(context.Background(), ip)
-
-		writer.WriteHeader(http.StatusOK)
-		json.NewEncoder(writer).Encode(sayOk{true, "Ip blocked " + ip})
-		log.Println("REST ip blocked:", ip)
+		if errJ := json.NewEncoder(writer).Encode(sayOk{Message: err.Error()}); errJ != nil {
+			log.Println(errJ)
+		}
+		log.Println("REST validator: ", err)
+		return
 	}
+
+	go firewall.BlockIP(context.Background(), ip)
+
+	writer.WriteHeader(http.StatusOK)
+	if errJ := json.NewEncoder(writer).Encode(sayOk{true, "Ip blocked " + ip}); errJ != nil {
+		log.Println(errJ)
+	}
+	log.Println("REST ip blocked:", ip)
+
 }
