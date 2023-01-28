@@ -21,9 +21,6 @@ jobs:
       - name: Verify dependencies
         run: go mod verify
 
-      - name: Run go vet
-        run: go vet -exclude=./example/... ./...
-
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
 
