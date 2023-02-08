@@ -18,8 +18,6 @@ install: build
 	install -m 755 $(GO2BAN_BINARY) /usr/local/bin
 	install -m 644 $(GO2BAN_SERVICE) /etc/systemd/system
 	systemctl daemon-reload
-	systemctl start $(GO2BAN_BINARY)
-	systemctl enable $(GO2BAN_BINARY)
 
 clean:
 	rm $(GO2BAN_BINARY)

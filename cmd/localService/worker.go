@@ -27,8 +27,7 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 	endBytesMap := storage.NewStorageMap()
 
 	saveMapFile := filepath.Join(config.Get().LogDir, nameMapFile)
-	err := endBytesMap.ReadFromFile(saveMapFile)
-	if err != nil {
+	if err := endBytesMap.ReadFromFile(saveMapFile); err != nil {
 		log.Println("Can't read from file map: ", err)
 	}
 
@@ -38,11 +37,9 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 				if service.On {
 					//Если в лог в докере получаем суслог всех рабочих контейнеров
 					if service.LogFile == "docker" {
-						dockerSysLogs, errD := docker.GetListsSyslogFiles()
-						if errD == nil {
+						if dockerSysLogs, err := docker.GetListsSyslogFiles(); err == nil {
 							for _, f := range dockerSysLogs {
 								service.LogFile = f
-
 								go checkLogAndBlock(ctx, service, countFailsMap, endBytesMap)
 							}
 						}
@@ -62,10 +59,10 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 			case <-ctx.Done():
 				stop()
 
-				err = endBytesMap.WriteToFile(saveMapFile)
-				if err != nil {
+				if err := endBytesMap.WriteToFile(saveMapFile); err != nil {
 					log.Printf("Save endBytesMap to file %s, err:%s", saveMapFile, err.Error())
 				}
+
 				if pprofEnd != nil {
 					pprofEnd.Stop()
 				}
