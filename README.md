@@ -58,7 +58,7 @@ The config file allows for various settings to be customized, including:
 ### Command-line:
 ```
 -cfgFile
-   Path to file go2ban.conf (default "/etc/go2ban/go2ban.conf")
+   Path to config file
 -clear
    Unlock all
 -d

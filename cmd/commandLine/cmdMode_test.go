@@ -23,12 +23,11 @@ func TestRun(t *testing.T) {
 	// Call the Run function
 	Run()
 
-	// Close the writer end of the pipe
-	w.Close()
-
 	// Copy the captured output to a buffer
 	var buf bytes.Buffer
-	io.Copy(&buf, r)
+	if _, err := io.Copy(&buf, r); err != nil {
+		t.Errorf("")
+	}
 
 	// Restore the original value of stdout
 	os.Stdout = rescueStdout
@@ -37,5 +36,4 @@ func TestRun(t *testing.T) {
 	if !strings.Contains(buf.String(), "IPs unlocked") {
 		t.Errorf("Expected %s, got %s", "IPs unlocked", buf.String())
 	}
-	r.Close()
 }
