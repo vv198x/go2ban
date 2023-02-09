@@ -24,6 +24,9 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
 
+      - name: Remove example
+        run: rm -rf example
+
       - name: Build
         run: go install
 
