@@ -4,17 +4,23 @@ import (
 	"net"
 )
 
-func GetLocalIPs() (end []string) {
+var l []string
+
+func GetLocalIPs() []string {
+	if len(l) > 0 {
+		return l
+	}
+
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
-		return
+		return l
 	}
+
 	for _, address := range addrs {
 		ipIntf := address.(*net.IPNet).IP.To4()
 		if ipIntf != nil {
-			end = append(end, ipIntf.String())
+			l = append(l, ipIntf.String())
 		}
-
 	}
-	return
+	return l
 }

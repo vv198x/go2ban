@@ -5,22 +5,24 @@ go2ban is a service for protecting VDS and VPS from brute-force passwords, scann
 1. Prerequisites: Make sure that you have a working Go development environment and that you have Go version >=1.15 installed on your machine.
 
 2. Clone the repository:
-   git clone https://github.com/vv198x/go2ban.git
+   `git clone https://github.com/vv198x/go2ban.git`
 
 3. Build the binary:
-   make build
+  ` make build`
 
 4. Run the installer:
-   sudo make install
+   `sudo make install`
 
-5. Start the service:
-   systemctl start go2ban
+5. Configuration:
+   Configure go2ban by editing the configuration file located at **/etc/go2ban/go2ban.conf**
 
-6. Enable the service:
-   systemctl enable go2ban
+6. Start the service:
+   `systemctl start go2ban`
 
-7. Configuration:
-   Configure go2ban by editing the configuration file located at /etc/go2ban/go2ban.conf
+7. Enable the service:
+   `systemctl enable go2ban`
+
+
 
 ### Configuration
 The config file allows for various settings to be customized, including:
@@ -49,6 +51,14 @@ The config file allows for various settings to be customized, including:
 
 ### Usage
 go2ban runs as a background service, continually monitoring for malicious IPs and applying firewall rules as necessary. The service can be controlled through gRPC commands or by sending REST requests to the specified port.
+
+### Blocking in the iptables raw table has several advantages, including:
+
+**Speed**: The raw table is the earliest table in the iptables firewall rule evaluation, allowing for quick and efficient blocking of incoming packets.
+
+**Security**: The raw table provides a strong first line of defense against incoming network traffic, helping to prevent malicious activity from reaching other parts of the system.
+
+**Connection Prevention**: Blocking traffic in the raw table ensures that the connection never even opens, which can be useful for mitigating DDoS attacks and reducing CPU load.
 
 ### Development
 The go2ban service is developed in Go and makes use of iptables for firewall management. The codebase is open-source and contributions are welcome.
