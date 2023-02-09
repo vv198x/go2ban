@@ -1,7 +1,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Go Reference](https://pkg.go.dev/badge/github.com/vv198x/go2ban.svg)](https://pkg.go.dev/github.com/vv198x/go2ban)
 
-### go2ban
+## go2ban
 go2ban is a service for protecting VDS and VPS from brute-force passwords, scanners, and DDoS attacks. It uses firewall rules to block malicious IPs and also has features such as a white list, fake SOCKS ports, and a REST server for manual IP blocking.
 
 ### Installation
@@ -72,7 +72,7 @@ go2ban runs as a background service, continually monitoring for malicious IPs an
 
 **Security**: The raw table provides a strong first line of defense against incoming network traffic, helping to prevent malicious activity from reaching other parts of the system.
 
-**Connection Prevention**: Blocking traffic in the raw table ensures that the connection never even opens, which can be useful for mitigating DDoS attacks and reducing CPU load.
+**Connection established**: Blocking traffic in the raw table ensures that the connection never even opens, which can be useful for mitigating DDoS attacks and reducing CPU load.
 
 ### Development
 The go2ban service is developed in Go and makes use of iptables for firewall management. The codebase is open-source and contributions are welcome.
