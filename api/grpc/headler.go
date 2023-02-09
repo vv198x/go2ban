@@ -1,4 +1,4 @@
-package gRPC
+package grpc
 
 import (
 	"context"
@@ -7,10 +7,11 @@ import (
 	"log"
 )
 
-type Server struct {
+type Server struct { //nolint
 	UnimplementedIP2BanServer
 }
 
+// nolint
 func (s *Server) IP(ctx context.Context, in *IPStringRequest) (*OKReply, error) {
 	ip, err := validator.CheckIp(in.Ip)
 

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/vv198x/go2ban/api/REST"
-	"github.com/vv198x/go2ban/api/gRPC"
+	"github.com/vv198x/go2ban/api/grpc"
+	"github.com/vv198x/go2ban/api/rest"
 	"github.com/vv198x/go2ban/cmd/commandLine"
 	"github.com/vv198x/go2ban/cmd/fakeSocks"
 	"github.com/vv198x/go2ban/cmd/firewall"
@@ -20,7 +20,7 @@ func main() {
 	commandLine.Run()
 	firewall.WorkerStart(config.Get().Flags.RunAsDaemon)
 	fakeSocks.Listen(config.Get().FakeSocksPorts)
-	REST.Start(config.Get().Flags.RunAsDaemon)
-	gRPC.Start(config.Get().Flags.RunAsDaemon)
+	rest.Start(config.Get().Flags.RunAsDaemon)
+	grpc.Start(config.Get().Flags.RunAsDaemon)
 	localService.WorkerStart(config.Get().Services, pprofEnd)
 }

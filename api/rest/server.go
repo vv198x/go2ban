@@ -1,4 +1,4 @@
-package REST
+package rest
 
 import (
 	"github.com/vv198x/go2ban/pkg/config"

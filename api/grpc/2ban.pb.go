@@ -4,7 +4,7 @@
 // 	protoc        v3.19.4
 // source: 2ban.proto
 
-package gRPC
+package grpc
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"

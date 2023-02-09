@@ -23,6 +23,11 @@ func TestRun(t *testing.T) {
 	// Call the Run function
 	Run()
 
+	// Close the writer end of the pipe
+	if err := w.Close(); err != nil {
+		t.Errorf("")
+	}
+
 	// Copy the captured output to a buffer
 	var buf bytes.Buffer
 	if _, err := io.Copy(&buf, r); err != nil {
