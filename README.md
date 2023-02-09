@@ -1,5 +1,6 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Go Reference](https://pkg.go.dev/badge/github.com/vv198x/go2ban.svg)](https://pkg.go.dev/github.com/vv198x/go2ban)
+[![Go Report Card](https://goreportcard.com/badge/github.com/vv198x/go2ban)](https://goreportcard.com/report/github.com/vv198x/go2ban)
 
 ## go2ban
 go2ban is a service for protecting VDS and VPS from brute-force passwords, scanners, and DDoS attacks. It uses firewall rules to block malicious IPs and also has features such as a white list, fake SOCKS ports, and a REST server for manual IP blocking.
@@ -66,13 +67,13 @@ The config file allows for various settings to be customized, including:
 ### Usage
 go2ban runs as a background service, continually monitoring for malicious IPs and applying firewall rules as necessary. The service can be controlled through gRPC commands or by sending REST requests to the specified port.
 
-### Blocking in the iptables raw table has several advantages, including:
+### Blocking in the iptables(netfilter) raw table has several advantages, including:
 
 **Speed**: The raw table is the earliest table in the iptables firewall rule evaluation, allowing for quick and efficient blocking of incoming packets.
 
 **Security**: The raw table provides a strong first line of defense against incoming network traffic, helping to prevent malicious activity from reaching other parts of the system.
 
-**Connection established**: Blocking traffic in the raw table ensures that the connection never even opens, which can be useful for mitigating DDoS attacks and reducing CPU load.
+**Connection don't established**: Blocking traffic in the raw table ensures that the connection never even opens, which can be useful for mitigating DDoS attacks and reducing CPU load.
 
 ### Development
 The go2ban service is developed in Go and makes use of iptables for firewall management. The codebase is open-source and contributions are welcome.
