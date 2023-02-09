@@ -22,5 +22,8 @@ install: build
 clean:
 	rm $(GO2BAN_BINARY)
 
-.PHONY: build install clean
+lint:
+	golangci-lint run $(go list ./... | grep -v example)
+
+.PHONY: build install clean lint
 .DEFAULT_GOAL := build

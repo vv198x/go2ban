@@ -1,3 +1,4 @@
+// nolint
 package api2Ban
 
 import (
