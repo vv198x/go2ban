@@ -1,3 +1,6 @@
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Go Reference](https://pkg.go.dev/badge/github.com/vv198x/go2ban.svg)](https://pkg.go.dev/github.com/vv198x/go2ban)
+
 ### go2ban
 go2ban is a service for protecting VDS and VPS from brute-force passwords, scanners, and DDoS attacks. It uses firewall rules to block malicious IPs and also has features such as a white list, fake SOCKS ports, and a REST server for manual IP blocking.
 
@@ -52,7 +55,7 @@ The config file allows for various settings to be customized, including:
 
 ### Command-line:
 ```
--cfgFile string
+-cfgFile
    Path to file go2ban.conf (default "/etc/go2ban/go2ban.conf")
 -clear
    Unlock all
