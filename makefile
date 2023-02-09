@@ -23,3 +23,4 @@ clean:
 	rm $(GO2BAN_BINARY)
 
 .PHONY: build install clean
+.DEFAULT_GOAL := build

@@ -5,22 +5,33 @@ go2ban is a service for protecting VDS and VPS from brute-force passwords, scann
 1. Prerequisites: Make sure that you have a working Go development environment and that you have Go version >=1.15 installed on your machine.
 
 2. Clone the repository:
-   `git clone https://github.com/vv198x/go2ban.git`
+``` 
+git clone https://github.com/vv198x/go2ban.git
+ ```
 
 3. Build the binary:
-  ` make build`
+``` 
+make
+``` 
 
 4. Run the installer:
-   `sudo make install`
-
-5. Configuration:
-   Configure go2ban by editing the configuration file located at **/etc/go2ban/go2ban.conf**
-
+``` 
+sudo make install
+```    
+   
+5. Configure go2ban by editing the configuration file:
+``` 
+vi /etc/go2ban/go2ban.conf
+```    
 6. Start the service:
-   `systemctl start go2ban`
+``` 
+systemctl start go2ban
+```    
 
 7. Enable the service:
-   `systemctl enable go2ban`
+``` 
+systemctl enable go2ban
+```    
 
 
 

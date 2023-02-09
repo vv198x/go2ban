@@ -1,4 +1,4 @@
-module go2ban
+module github.com/vv198x/go2ban
 
 go 1.19
 

@@ -1,15 +1,15 @@
 package main
 
 import (
-	"go2ban/api/REST"
-	"go2ban/api/gRPC"
-	"go2ban/cmd/commandLine"
-	"go2ban/cmd/fakeSocks"
-	"go2ban/cmd/firewall"
-	"go2ban/cmd/localService"
-	"go2ban/pkg/config"
-	"go2ban/pkg/logger"
-	"go2ban/pkg/profile"
+	"github.com/vv198x/go2ban/api/REST"
+	"github.com/vv198x/go2ban/api/gRPC"
+	"github.com/vv198x/go2ban/cmd/commandLine"
+	"github.com/vv198x/go2ban/cmd/fakeSocks"
+	"github.com/vv198x/go2ban/cmd/firewall"
+	"github.com/vv198x/go2ban/cmd/localService"
+	"github.com/vv198x/go2ban/pkg/config"
+	"github.com/vv198x/go2ban/pkg/logger"
+	proFile "github.com/vv198x/go2ban/pkg/profile"
 )
 
 func main() {

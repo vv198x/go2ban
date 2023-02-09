@@ -2,7 +2,7 @@ package config
 
 import (
 	"encoding/json"
-	"go2ban/pkg/osUtil"
+	"github.com/vv198x/go2ban/pkg/osUtil"
 	"log"
 	"strconv"
 	"strings"
@@ -30,7 +30,7 @@ func Load() {
 	exportCfg.ServiceCheckMinutes = defaultServiceCheck
 	exportCfg.ServiceFails = defaultServiceFails
 
-	jsonData := []byte{}
+	jsonData := make([]byte, 0)
 
 	for i, line := range cfgSt {
 		splitSt := strings.Split(line, "=")

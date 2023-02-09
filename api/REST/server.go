@@ -1,7 +1,7 @@
 package REST
 
 import (
-	"go2ban/pkg/config"
+	"github.com/vv198x/go2ban/pkg/config"
 	"log"
 	"net/http"
 	"strconv"

@@ -3,8 +3,8 @@ package commandLine
 import (
 	"context"
 	"fmt"
-	"go2ban/cmd/firewall"
-	"go2ban/pkg/config"
+	"github.com/vv198x/go2ban/cmd/firewall"
+	"github.com/vv198x/go2ban/pkg/config"
 )
 
 func Run() {

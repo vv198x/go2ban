@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"go2ban/pkg/config"
+	"github.com/vv198x/go2ban/pkg/config"
 	"log"
 	"os/exec"
 	"time"

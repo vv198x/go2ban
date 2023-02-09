@@ -3,10 +3,10 @@ package localService
 import (
 	"bytes"
 	"context"
-	"go2ban/cmd/firewall"
-	"go2ban/pkg/config"
-	"go2ban/pkg/storage"
-	"go2ban/pkg/validator"
+	"github.com/vv198x/go2ban/cmd/firewall"
+	"github.com/vv198x/go2ban/pkg/config"
+	"github.com/vv198x/go2ban/pkg/storage"
+	"github.com/vv198x/go2ban/pkg/validator"
 	"log"
 	"os"
 )
@@ -20,30 +20,30 @@ func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap
 	}
 	defer file.Close()
 
-	//Для начала чтения
+	//To start reading
 	var startByte int64
 
-	//Сохранять последний размер файла - по лог файлу и имени сервиса
+	//Keep last file size - by log file and service name
 	key := service.Name + service.LogFile
 
 	endByte := endBytesMap.Load(key)
 
-	//Если файл стал меньше, читаем заново
+	//If the file has become smaller, read again
 	if endByte <= f.Size() {
 		startByte = endByte
 	} else {
 		endBytesMap.Save(key, 0)
 	}
 
-	// Не читаем 0 байт
+	// Do not read 0 bytes
 	if f.Size()-startByte == 0 {
 		return
 	}
 
-	//Буфер чтения
+	//Read Buffer
 	buf := make([]byte, f.Size()-startByte)
 
-	//Читаем откуда закончили в последний раз
+	//Read where we finished last
 	readB, err := file.ReadAt(buf, startByte)
 	if err != nil {
 		log.Println("Local service, can't readAt log file ", err)

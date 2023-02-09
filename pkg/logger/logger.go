@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"go2ban/pkg/config"
+	"github.com/vv198x/go2ban/pkg/config"
 	"log"
 	"log/syslog"
 	"os"

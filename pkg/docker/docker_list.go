@@ -2,7 +2,7 @@ package docker
 
 import (
 	"context"
-	"go2ban/pkg/osUtil"
+	"github.com/vv198x/go2ban/pkg/osUtil"
 	"path/filepath"
 
 	"github.com/docker/docker/api/types"
