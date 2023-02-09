@@ -23,7 +23,7 @@ func TestRun(t *testing.T) {
 	// Call the Run function
 	Run()
 
-	// Close the write end of the pipe
+	// Close the writer end of the pipe
 	w.Close()
 
 	// Copy the captured output to a buffer
