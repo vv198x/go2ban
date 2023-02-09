@@ -16,6 +16,7 @@ import (
 const nameMapFile = "endBytesMap"
 
 func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
+	//todo проверить сервисы, если все выключены не или нет выйти
 	if !config.Get().Flags.RunAsDaemon {
 		return
 	}
