@@ -14,6 +14,7 @@ import (
 
 func main() {
 	pprofEnd := proFile.Start("nope")
+	config.ReadFlags()
 	config.Load()
 	logger.Start()
 	commandLine.Run()

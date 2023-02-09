@@ -16,13 +16,13 @@ func GetListsSyslogFiles() ([]string, error) {
 	}
 	defer cli.Close()
 
-	//Получаю все контейнеры
+	// Receive all containers
 	containers, err := cli.ContainerList(context.Background(), types.ContainerListOptions{})
 	if err != nil {
 		return nil, err
 	}
 
-	//Проверяю суслог файл у контейнера
+	// Checking the syslog file at the container
 	syslogPaths := make([]string, 0, len(containers))
 	for _, container := range containers {
 		syslogPath := filepath.Join("/var/lib/docker/containers", container.ID, container.ID+"-json.log")

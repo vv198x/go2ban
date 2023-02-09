@@ -8,6 +8,12 @@ import (
 	"time"
 )
 
+func TestIptablesBlock(t *testing.T) {
+	ip := getRandomIP()
+	BlockIP(context.Background(), ip)
+	//byt, err := runOutputCMD("iptables-save")
+	//fmt.Println(string(byt), err)
+}
 func BenchmarkIptablesBlock(b *testing.B) {
 	ctx := context.Background()
 

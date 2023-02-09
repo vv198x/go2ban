@@ -32,8 +32,8 @@ jobs:
 
       - name: Test
         run: |
-          go test -v -cover ./... -coverprofile coverage.out -coverpkg ./...
-          go tool cover -func coverage.out -o coverage.out  # Replaces coverage.out with the analysis of coverage.out
+          sudo go test -v -cover ./... -coverprofile coverage.out -coverpkg ./...
+          sudo go tool cover -func coverage.out -o coverage.out  # Replaces coverage.out with the analysis of coverage.out
 
       - name: Go Coverage Badge
         uses: tj-actions/coverage-badge-go@v1

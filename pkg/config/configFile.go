@@ -14,11 +14,10 @@ func Load() {
 		log.Fatalln("Only the root user is allowed to run")
 	}
 
-	readFlags()
-
 	if !osUtil.CheckFile(exportCfg.Flags.ConfigFile) {
 		log.Fatalln("Config file not found")
 	}
+
 	cfgSt, err := osUtil.ReadStsFile(exportCfg.Flags.ConfigFile)
 	if err != nil || len(cfgSt) == 0 {
 		log.Fatalln("Err read config file ")
@@ -33,6 +32,9 @@ func Load() {
 	jsonData := make([]byte, 0)
 
 	for i, line := range cfgSt {
+		if len(line) == 0 {
+			continue
+		}
 		splitSt := strings.Split(line, "=")
 		if line[0] != byte('#') && len(splitSt) > 0 {
 

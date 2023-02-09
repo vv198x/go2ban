@@ -46,7 +46,6 @@ func TestListen(t *testing.T) {
 		}
 		conn.Close()
 	}
-
 	// Wait for the listener to stop
 	<-done
 
@@ -59,6 +58,7 @@ func TestListen(t *testing.T) {
 	if !strings.Contains(buf.String(), expectedOpen) {
 		t.Errorf("Expected log to contain %q, got %q", expectedOpen, buf.String())
 	}
+	//fmt.Println(buf.String())
 	os.Stdout = rescueStdout
 }
 

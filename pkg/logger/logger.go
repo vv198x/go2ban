@@ -3,7 +3,6 @@ package logger
 import (
 	"github.com/vv198x/go2ban/pkg/config"
 	"log"
-	"log/syslog"
 	"os"
 	"path/filepath"
 	"time"
@@ -26,15 +25,4 @@ func Start() {
 		log.Fatalln("Dont create log file")
 	}
 	log.SetOutput(logFile)
-}
-
-func SendSyslogMail(msg string) {
-	syslog, err := syslog.New(syslog.LOG_MAIL, "go2ban")
-	if err != nil {
-		log.Println("Load syslog ", err)
-	} else {
-		log.SetOutput(syslog)
-		log.Println(msg)
-		log.SetOutput(logFile)
-	}
 }
