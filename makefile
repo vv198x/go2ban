@@ -25,5 +25,8 @@ clean:
 lint:
 	golangci-lint run $(go list ./... | grep -v example)
 
-.PHONY: build install clean lint
+test:
+	sudo go test $(go list ./... | grep -v example)
+
+.PHONY: build install clean lint test
 .DEFAULT_GOAL := build
