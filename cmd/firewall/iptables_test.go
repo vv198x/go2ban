@@ -15,9 +15,6 @@ import (
 
 var fw = &iptables{}
 
-func init() {
-	fw.Worker()
-}
 func Test_iptables_Worker(t *testing.T) {
 	tests := []struct {
 		name    string
@@ -26,7 +23,7 @@ func Test_iptables_Worker(t *testing.T) {
 		{"Test create chan", 0},
 		{"Worker del ", 10},
 	}
-
+	fw.Worker()
 	for i, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			config.Get().BlockedIps = tt.blocked

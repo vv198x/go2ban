@@ -18,7 +18,7 @@ func (s *serviceWork) checkLogAndBlock(ctx context.Context, sysFile string, coun
 		log.Println("Local service, can't open log file ", sysFile, err)
 		return
 	}
-	defer file.Close()
+	defer file.Close() //nolint
 
 	//To start reading
 	var startByte int64

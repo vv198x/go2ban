@@ -24,7 +24,7 @@ func TestStart(t *testing.T) {
 				log.Fatalln("gRPC error ", err)
 			}
 
-			defer lis.Close()
+			defer lis.Close() //nolint
 
 			s := grpc.NewServer()
 			defer s.Stop()
