@@ -31,6 +31,8 @@ const (
 	defaultServiceCheck   = 2
 	defaultServiceFails   = 2
 	IsDocker              = "docker"
+	IsIptables            = "iptables"
+	IsMock                = "mock"
 )
 
 var exportCfg = Cfg{}

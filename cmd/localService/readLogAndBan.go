@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"github.com/vv198x/go2ban/cmd/firewall"
-	"github.com/vv198x/go2ban/pkg/config"
+	"github.com/vv198x/go2ban/config"
 	"github.com/vv198x/go2ban/pkg/storage"
 	"github.com/vv198x/go2ban/pkg/validator"
 	"log"
@@ -66,7 +66,7 @@ func (s *serviceWork) checkLogAndBlock(ctx context.Context, sysFile string, coun
 
 				if count == config.Get().ServiceFails {
 
-					go firewall.BlockIP(ctx, ip)
+					go firewall.Do().Block(ctx, ip)
 
 					log.Printf("Block localservice: %s ip: %s", s.Name, ip)
 				}
@@ -75,7 +75,4 @@ func (s *serviceWork) checkLogAndBlock(ctx context.Context, sysFile string, coun
 	}
 
 	endBytesMap.Save(key, endByte+int64(readB))
-
-	//log.Printf("Bytes read %d of filesize %d, file: %s, \non seconds %.4f",
-	//	readB, f.Size(), f.Name(), time.Since(start).Seconds())
 }

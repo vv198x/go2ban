@@ -7,7 +7,7 @@ import (
 )
 
 func TestLoad(t *testing.T) {
-	testCfg := "/tmp/test_config.cfg"
+	testCfg := "/tmp/test_config.config"
 	exportCfg.Flags.ConfigFile = testCfg
 	if exportCfg.Flags.ConfigFile != testCfg {
 		t.Fatalf("Incorrect flag value for ConfigFile")

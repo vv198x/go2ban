@@ -42,7 +42,7 @@ func getIp(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	go firewall.BlockIP(context.Background(), ip)
+	go firewall.Do().Block(context.Background(), ip)
 
 	writer.WriteHeader(http.StatusOK)
 	if errJ := json.NewEncoder(writer).Encode(sayOk{true, "Ip blocked " + ip}); errJ != nil {

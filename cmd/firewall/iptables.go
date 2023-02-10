@@ -4,24 +4,34 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"github.com/vv198x/go2ban/pkg/config"
+	"github.com/vv198x/go2ban/config"
 	"log"
-	"os/exec"
 	"time"
 )
 
-func iptablesBlock(ctx context.Context, ip string) {
+type iptables struct{}
+
+func (fw *iptables) Block(ctx context.Context, ip string) {
+	start := time.Now()
+
 	err := runCMD("iptables --table raw --append go2ban --source " + ip + " --jump DROP")
 	if err != nil {
 		log.Println("Not blocked ", ip, err)
 	}
+	select {
+	case <-ctx.Done():
+		elapsed := time.Since(start).Nanoseconds() / 1e3
+		log.Println("Blocked in microseconds:", elapsed)
+	}
 }
 
-func workerIptables() {
+func (fw *iptables) Worker() {
+
 	err := runCMD("iptables --table raw --new go2ban")
 	if err != nil && err.Error() != "exit status 1" {
 		log.Println("Not add chain go2ban ", err)
 	}
+
 	byt, err := runOutputCMD("iptables-save")
 	if len(byt) == 0 {
 		log.Fatalln("Can't get iptables settings, iptables-save", err)
@@ -35,7 +45,7 @@ func workerIptables() {
 	log.Println("Iptables: add chain go2ban to table raw")
 	go func() {
 		for {
-			count := countBlocked()
+			count := fw.countBlocked()
 			cfgMaxLocked := config.Get().BlockedIps
 			if count > 0 && cfgMaxLocked < count {
 				start := time.Now()
@@ -52,8 +62,8 @@ func workerIptables() {
 	}()
 }
 
-func iptablesUnlockAll(ctx context.Context) (ips int, err error) {
-	ips = countBlocked()
+func (fw *iptables) UnlockAll(ctx context.Context) (ips int, err error) {
+	ips = fw.countBlocked()
 	err = runCMD(`iptables --table raw --flush go2ban`)
 	if err != nil && err.Error() != "exit status 1" {
 		log.Println("Don't del list ", err)
@@ -63,19 +73,10 @@ func iptablesUnlockAll(ctx context.Context) (ips int, err error) {
 	return
 }
 
-func countBlocked() (ips int) {
+func (fw *iptables) countBlocked() (ips int) {
 	byt, err := runOutputCMD("iptables-save")
 	if err == nil {
 		ips = bytes.Count(byt, []byte{'A', ' ', 'g', 'o', '2', 'b', 'a', 'n'})
 	}
 	return
-}
-
-func runCMD(firewallCMD string) error {
-	return exec.Command("sh", "-c", firewallCMD).Run()
-}
-
-func runOutputCMD(firewallCMD string) ([]byte, error) {
-	b, err := exec.Command("sh", "-c", firewallCMD).Output()
-	return b, err
 }

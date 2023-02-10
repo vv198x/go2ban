@@ -10,7 +10,7 @@ import (
 
 func TestIptablesBlock(t *testing.T) {
 	ip := getRandomIP()
-	BlockIP(context.Background(), ip)
+	Do().Block(context.Background(), ip)
 	//byt, err := runOutputCMD("iptables-save")
 	//fmt.Println(string(byt), err)
 }
@@ -20,7 +20,7 @@ func BenchmarkIptablesBlock(b *testing.B) {
 	b.Run("100 iterations", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			for i := 0; i < 100; i++ {
-				iptablesBlock(ctx, getRandomIP())
+				Do().Block(ctx, getRandomIP())
 			}
 		}
 	})
@@ -28,7 +28,7 @@ func BenchmarkIptablesBlock(b *testing.B) {
 	b.Run("500 iterations", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			for i := 0; i < 900; i++ {
-				iptablesBlock(ctx, getRandomIP())
+				Do().Block(ctx, getRandomIP())
 			}
 		}
 	})
@@ -36,7 +36,7 @@ func BenchmarkIptablesBlock(b *testing.B) {
 	b.Run("2000 iterations", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			for i := 0; i < 2000; i++ {
-				iptablesBlock(ctx, getRandomIP())
+				Do().Block(ctx, getRandomIP())
 			}
 		}
 	})
@@ -44,7 +44,7 @@ func BenchmarkIptablesBlock(b *testing.B) {
 
 func BenchmarkIptablesUnlockAll(b *testing.B) {
 	b.Run("1 iteration", func(b *testing.B) {
-		iptablesUnlockAll(context.Background())
+		Do().UnlockAll(context.Background())
 	})
 }
 

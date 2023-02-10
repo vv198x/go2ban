@@ -3,7 +3,7 @@ package fakeSocks
 import (
 	"context"
 	"github.com/vv198x/go2ban/cmd/firewall"
-	"github.com/vv198x/go2ban/pkg/config"
+	"github.com/vv198x/go2ban/config"
 	"github.com/vv198x/go2ban/pkg/storage"
 	"github.com/vv198x/go2ban/pkg/validator"
 	"log"
@@ -50,7 +50,7 @@ func Listen(ports []int) {
 					count := int(counterMap.Load(ip))
 					if count == config.Get().FakeSocksFails {
 
-						go firewall.BlockIP(context.Background(), ip)
+						go firewall.Do().Block(context.Background(), ip)
 
 						log.Println("Fake socks ip bloked:", ip)
 					}

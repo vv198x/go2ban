@@ -7,7 +7,7 @@ import (
 	"github.com/vv198x/go2ban/cmd/fakeSocks"
 	"github.com/vv198x/go2ban/cmd/firewall"
 	"github.com/vv198x/go2ban/cmd/localService"
-	"github.com/vv198x/go2ban/pkg/config"
+	"github.com/vv198x/go2ban/config"
 	"github.com/vv198x/go2ban/pkg/logger"
 	proFile "github.com/vv198x/go2ban/pkg/profile"
 )
@@ -18,7 +18,7 @@ func main() {
 	config.Load()
 	logger.Start()
 	commandLine.Run()
-	firewall.WorkerStart(config.Get().Flags.RunAsDaemon)
+	firewall.Initialization(config.Get().Flags.RunAsDaemon)
 	fakeSocks.Listen(config.Get().FakeSocksPorts)
 	rest.Start(config.Get().Flags.RunAsDaemon)
 	grpc.Start(config.Get().Flags.RunAsDaemon)

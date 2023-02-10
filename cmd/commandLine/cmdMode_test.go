@@ -2,7 +2,7 @@ package commandLine
 
 import (
 	"bytes"
-	"github.com/vv198x/go2ban/pkg/config"
+	"github.com/vv198x/go2ban/config"
 	"io"
 	"os"
 	"strings"

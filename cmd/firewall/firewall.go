@@ -2,42 +2,48 @@ package firewall
 
 import (
 	"context"
-	"github.com/vv198x/go2ban/pkg/config"
+	"github.com/vv198x/go2ban/config"
 	"log"
-	"time"
+	"os/exec"
 )
 
 const sleepHour = 12
 
-func BlockIP(ctx context.Context, ip string) {
-	switch config.Get().Firewall {
-	case "iptables":
-		iptablesBlock(ctx, ip)
-	}
-	start := time.Now()
-	go func() {
-		select {
-		case <-ctx.Done():
-			log.Println("Blocked in microseconds :", time.Since(start).Microseconds())
-		case <-time.After(50 * time.Microsecond):
-			log.Println("* Runs longer than usual *")
-		}
-	}()
+type Firewall interface {
+	Block(ctx context.Context, ip string)
+	Worker()
+	UnlockAll(ctx context.Context) (ips int, err error)
+	countBlocked() (ips int)
 }
 
-func UnlockAll(ctx context.Context) (blockedIp int, err error) {
-	switch config.Get().Firewall {
-	case "iptables":
-		return iptablesUnlockAll(ctx)
-	}
-	return
+var exportFirewall Firewall
+
+func Do() Firewall {
+	return exportFirewall
 }
 
-func WorkerStart(RunAsDaemon bool) {
-	if RunAsDaemon {
-		switch config.Get().Firewall {
-		case "iptables":
-			workerIptables()
-		}
+func Initialization(runAsDaemon bool) {
+	switch config.Get().Firewall {
+	case config.IsIptables:
+		exportFirewall = &iptables{}
+	case config.IsMock:
+		exportFirewall = &mock{}
+	default:
+		log.Fatalln("Bad firewall")
 	}
+
+	if !runAsDaemon {
+		return
+	}
+
+	go exportFirewall.Worker()
+}
+
+func runCMD(firewallCMD string) error {
+	return exec.Command("sh", "-c", firewallCMD).Run()
+}
+
+func runOutputCMD(firewallCMD string) ([]byte, error) {
+	b, err := exec.Command("sh", "-c", firewallCMD).Output()
+	return b, err
 }
