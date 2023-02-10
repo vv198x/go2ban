@@ -15,11 +15,6 @@ func ReadFlags() {
 	daemon := flag.Bool("d", defaultRunDaemon, "Run as daemon")
 	clear := flag.Bool("clear", false, "Unlock all")
 
-	_ = flag.Bool("test.v", false, "Test flag")
-	_ = flag.Bool("test.paniconexit0", false, "Test flag")
-	_ = flag.Bool("test.run", false, "Test flag")
-	_ = flag.Bool("test.timeout", false, "Test flag")
-
 	flag.Parse()
 	exportCfg.Flags.RunAsDaemon = *daemon
 	exportCfg.Flags.ConfigFile = *cfgFile

@@ -18,11 +18,8 @@ func (fw *iptables) Block(ctx context.Context, ip string) {
 	if err != nil {
 		log.Println("Not blocked ", ip, err)
 	}
-	select {
-	case <-ctx.Done():
-		elapsed := time.Since(start).Nanoseconds() / 1e3
-		log.Println("Blocked in microseconds:", elapsed)
-	}
+
+	log.Println("Blocked in milliseconds: ", time.Since(start).Milliseconds())
 }
 
 func (fw *iptables) Worker() {
@@ -36,7 +33,7 @@ func (fw *iptables) Worker() {
 	if len(byt) == 0 {
 		log.Fatalln("Can't get iptables settings, iptables-save", err)
 	}
-	if !bytes.Contains(byt, []byte{'j', ' ', 'g', 'o', '2', 'b', 'a', 'n'}) {
+	if !bytes.Contains(byt, []byte("j go2ban")) {
 		err = runCMD("iptables --table raw --insert PREROUTING --jump go2ban")
 		if err != nil {
 			log.Println("Not add chain go2ban to table raw ", err)
@@ -76,7 +73,7 @@ func (fw *iptables) UnlockAll(ctx context.Context) (ips int, err error) {
 func (fw *iptables) countBlocked() (ips int) {
 	byt, err := runOutputCMD("iptables-save")
 	if err == nil {
-		ips = bytes.Count(byt, []byte{'A', ' ', 'g', 'o', '2', 'b', 'a', 'n'})
+		ips = bytes.Count(byt, []byte("A go2ban"))
 	}
 	return
 }

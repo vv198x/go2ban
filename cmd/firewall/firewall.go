@@ -44,6 +44,5 @@ func runCMD(firewallCMD string) error {
 }
 
 func runOutputCMD(firewallCMD string) ([]byte, error) {
-	b, err := exec.Command("sh", "-c", firewallCMD).Output()
-	return b, err
+	return exec.Command("sh", "-c", firewallCMD).Output()
 }

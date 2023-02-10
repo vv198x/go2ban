@@ -24,7 +24,7 @@ func (s *serviceWork) checkLogAndBlock(ctx context.Context, sysFile string, coun
 	var startByte int64
 
 	//Keep last file size
-	key := sysFile
+	key := s.Name + sysFile
 
 	endByte := endBytesMap.Load(key)
 
