@@ -10,6 +10,7 @@ import (
 )
 
 func TestGetIp(t *testing.T) {
+	firewall.ExportFirewall = &firewall.Mock{}
 	// Create a request to pass to the handler
 	request, err := http.NewRequest("POST", "/", strings.NewReader("ip=192.168.0.1"))
 	if err != nil {
