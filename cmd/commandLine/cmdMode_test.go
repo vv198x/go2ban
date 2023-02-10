@@ -2,6 +2,7 @@ package commandLine
 
 import (
 	"bytes"
+	"github.com/vv198x/go2ban/cmd/firewall"
 	"github.com/vv198x/go2ban/config"
 	"io"
 	"os"
@@ -10,6 +11,7 @@ import (
 )
 
 func TestRun(t *testing.T) {
+	firewall.ExportFirewall = &firewall.Mock{}
 	// Store the original value of stdout
 	rescueStdout := os.Stdout
 

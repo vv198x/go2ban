@@ -2,12 +2,15 @@ package localService
 
 import (
 	"flag"
+	"github.com/vv198x/go2ban/cmd/firewall"
 	"github.com/vv198x/go2ban/config"
 	"os"
 	"testing"
 )
 
 func TestWorkerStart(t *testing.T) {
+	firewall.ExportFirewall = &firewall.Mock{}
+
 	// Reset the flags before the test
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 

@@ -26,9 +26,7 @@ func TestIPStringRequest_Descriptor(t *testing.T) {
 		fields fields
 		want   []byte
 		want1  []int
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ip := &IPStringRequest{
@@ -55,9 +53,7 @@ func TestIPStringRequest_GetIp(t *testing.T) {
 		name   string
 		fields fields
 		want   string
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			x := &IPStringRequest{
@@ -81,9 +77,7 @@ func TestIPStringRequest_ProtoMessage(t *testing.T) {
 	tests := []struct {
 		name   string
 		fields fields
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ip := &IPStringRequest{
@@ -108,9 +102,7 @@ func TestIPStringRequest_ProtoReflect(t *testing.T) {
 		name   string
 		fields fields
 		want   protoreflect.Message
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			x := &IPStringRequest{
@@ -134,9 +126,7 @@ func TestIPStringRequest_Reset(t *testing.T) {
 	tests := []struct {
 		name   string
 		fields fields
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			x := &IPStringRequest{
@@ -161,9 +151,7 @@ func TestIPStringRequest_String(t *testing.T) {
 		name   string
 		fields fields
 		want   string
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			x := &IPStringRequest{
@@ -189,9 +177,7 @@ func TestOKReply_Descriptor(t *testing.T) {
 		fields fields
 		want   []byte
 		want1  []int
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ok := &OKReply{
@@ -218,9 +204,7 @@ func TestOKReply_GetOk(t *testing.T) {
 		name   string
 		fields fields
 		want   bool
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			x := &OKReply{
@@ -244,9 +228,7 @@ func TestOKReply_ProtoMessage(t *testing.T) {
 	tests := []struct {
 		name   string
 		fields fields
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ok := &OKReply{
@@ -271,9 +253,7 @@ func TestOKReply_ProtoReflect(t *testing.T) {
 		name   string
 		fields fields
 		want   protoreflect.Message
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			x := &OKReply{
@@ -297,9 +277,7 @@ func TestOKReply_Reset(t *testing.T) {
 	tests := []struct {
 		name   string
 		fields fields
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			x := &OKReply{
@@ -324,9 +302,7 @@ func TestOKReply_String(t *testing.T) {
 		name   string
 		fields fields
 		want   string
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			x := &OKReply{
@@ -343,9 +319,7 @@ func TestOKReply_String(t *testing.T) {
 func Test_file__2ban_proto_init(t *testing.T) {
 	tests := []struct {
 		name string
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			file__2ban_proto_init()
@@ -357,9 +331,7 @@ func Test_file__2ban_proto_rawDescGZIP(t *testing.T) {
 	tests := []struct {
 		name string
 		want []byte
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.Equalf(t, tt.want, file__2ban_proto_rawDescGZIP(), "file__2ban_proto_rawDescGZIP()")

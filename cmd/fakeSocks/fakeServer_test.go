@@ -2,6 +2,7 @@ package fakeSocks
 
 import (
 	"bytes"
+	"github.com/vv198x/go2ban/cmd/firewall"
 	"github.com/vv198x/go2ban/config"
 	"log"
 	"net"
@@ -13,6 +14,8 @@ import (
 )
 
 func TestListen(t *testing.T) {
+	firewall.ExportFirewall = &firewall.Mock{}
+
 	defer func() {
 		if r := recover(); r != nil {
 			t.Fatalf("Listen panicked: %v", r)

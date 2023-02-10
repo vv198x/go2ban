@@ -21,9 +21,7 @@ func TestNewIP2BanClient(t *testing.T) {
 		name string
 		args args
 		want IP2BanClient
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.Equalf(t, tt.want, NewIP2BanClient(tt.args.cc), "NewIP2BanClient(%v)", tt.args.cc)
@@ -39,9 +37,7 @@ func TestRegisterIP2BanServer(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			RegisterIP2BanServer(tt.args.s, tt.args.srv)
@@ -59,9 +55,7 @@ func TestUnimplementedIP2BanServer_IP(t *testing.T) {
 		args    args
 		want    *OKReply
 		wantErr assert.ErrorAssertionFunc
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			un := UnimplementedIP2BanServer{}
@@ -77,9 +71,7 @@ func TestUnimplementedIP2BanServer_IP(t *testing.T) {
 func TestUnimplementedIP2BanServer_mustEmbedUnimplementedIP2BanServer(t *testing.T) {
 	tests := []struct {
 		name string
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			un := UnimplementedIP2BanServer{}
@@ -100,9 +92,7 @@ func Test__IP2Ban_IP_Handler(t *testing.T) {
 		args    args
 		want    interface{}
 		wantErr assert.ErrorAssertionFunc
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, _ := _IP2Ban_IP_Handler(tt.args.srv, tt.args.ctx, tt.args.dec, tt.args.interceptor)
@@ -127,9 +117,7 @@ func Test_iP2BanClient_IP(t *testing.T) {
 		args    args
 		want    *OKReply
 		wantErr assert.ErrorAssertionFunc
-	}{
-		// TODO: Add test cases.
-	}
+	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &iP2BanClient{

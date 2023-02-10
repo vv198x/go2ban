@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"github.com/vv198x/go2ban/cmd/firewall"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -38,6 +39,8 @@ func TestGetIp(t *testing.T) {
 }
 
 func TestGetIpBadRequest(t *testing.T) {
+	firewall.ExportFirewall = &firewall.Mock{}
+
 	// Create a request to pass to the handler
 	request, err := http.NewRequest("GET", "/", nil)
 	if err != nil {

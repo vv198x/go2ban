@@ -16,18 +16,18 @@ type Firewall interface {
 	countBlocked() (ips int)
 }
 
-var exportFirewall Firewall
+var ExportFirewall Firewall
 
 func Do() Firewall {
-	return exportFirewall
+	return ExportFirewall
 }
 
 func Initialization(runAsDaemon bool) {
 	switch config.Get().Firewall {
 	case config.IsIptables:
-		exportFirewall = &iptables{}
+		ExportFirewall = &iptables{}
 	case config.IsMock:
-		exportFirewall = &mock{}
+		ExportFirewall = &Mock{}
 	default:
 		log.Fatalln("Bad firewall")
 	}
@@ -36,7 +36,7 @@ func Initialization(runAsDaemon bool) {
 		return
 	}
 
-	go exportFirewall.Worker()
+	go ExportFirewall.Worker()
 }
 
 func runCMD(firewallCMD string) error {
