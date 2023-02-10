@@ -25,7 +25,7 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 	if !config.Get().Flags.RunAsDaemon {
 		return
 	}
-	// If docker make all find string in one strings
+	// If docker add up all search strings in array
 	dockerSts := make([][]byte, 0)
 	servicesWork := make([]serviceWork, 0)
 	for _, s := range services {
@@ -52,11 +52,6 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 				SysLogFiles: dockerSysLogs,
 			})
 		}
-	}
-	// TODO del this for debug
-	log.Println("Find service: ")
-	for _, tmp := range servicesWork {
-		log.Println(tmp.SysLogFiles, tmp.FindSt)
 	}
 
 	// Context for get exit signal, save map to file
@@ -96,5 +91,4 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 		os.Exit(2)
 
 	}
-
 }
