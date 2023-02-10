@@ -12,7 +12,7 @@ func TestWorkerStart(t *testing.T) {
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 
 	//Check not run
-	config.Get().Flags.RunAsDaemon = true
+	config.Get().Flags.RunAsDaemon = false
 	config.Get().ServiceCheckMinutes = 2
 
 	var services []config.Service
@@ -21,7 +21,7 @@ func TestWorkerStart(t *testing.T) {
 	// Test the function with an empty slice of services
 	WorkerStart(services, pprofEnd)
 
-	// Test the function with a slice of services
+	// Test the function with a slice of services проверить выключенные
 	service1 := config.Service{On: true, LogFile: "test.log"}
 	service2 := config.Service{On: true, LogFile: "docker"}
 	services = []config.Service{service1, service2}

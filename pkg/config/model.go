@@ -30,6 +30,7 @@ const (
 	defaultFakeSocksFails = 2
 	defaultServiceCheck   = 2
 	defaultServiceFails   = 2
+	IsDocker              = "docker"
 )
 
 var exportCfg = Cfg{}

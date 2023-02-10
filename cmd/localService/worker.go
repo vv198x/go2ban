@@ -15,11 +15,50 @@ import (
 
 const nameMapFile = "endBytesMap"
 
+type serviceWork struct {
+	Name        string
+	FindSt      [][]byte
+	SysLogFiles []string
+}
+
 func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
-	//todo проверить сервисы, если все выключены не или нет выйти
 	if !config.Get().Flags.RunAsDaemon {
 		return
 	}
+	// If docker make all find string in one strings
+	dockerSts := make([][]byte, 0)
+	servicesWork := make([]serviceWork, 0)
+	for _, s := range services {
+		if !s.On {
+			continue
+		}
+		if s.LogFile != config.IsDocker {
+			servicesWork = append(servicesWork, serviceWork{
+				Name:        s.Name,
+				FindSt:      [][]byte{[]byte(s.Regxp)},
+				SysLogFiles: []string{s.LogFile},
+			})
+		} else { // Docker
+			dockerSts = append(dockerSts, []byte(s.Regxp))
+		}
+	}
+
+	// Service for docker
+	if len(dockerSts) > 0 {
+		if dockerSysLogs, err := docker.GetListsSyslogFiles(); err == nil {
+			servicesWork = append(servicesWork, serviceWork{
+				Name:        config.IsDocker,
+				FindSt:      dockerSts,
+				SysLogFiles: dockerSysLogs,
+			})
+		}
+	}
+	// TODO del this for debug
+	log.Println("Find service: ")
+	for _, tmp := range servicesWork {
+		log.Println(tmp.SysLogFiles, tmp.FindSt)
+	}
+
 	// Context for get exit signal, save map to file
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
@@ -34,43 +73,28 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 
 	go func(sleepMinutes time.Duration) {
 		for {
-			for _, service := range services {
-				if service.On {
-					// If we get the work log of all working containers in the docker
-					if service.LogFile == "docker" {
-						if dockerSysLogs, err := docker.GetListsSyslogFiles(); err == nil {
-							for _, f := range dockerSysLogs {
-								service.LogFile = f
-								go checkLogAndBlock(ctx, service, countFailsMap, endBytesMap)
-							}
-						}
-					} else {
-
-						go checkLogAndBlock(ctx, service, countFailsMap, endBytesMap)
-					}
+			for _, sw := range servicesWork {
+				for _, f := range sw.SysLogFiles {
+					go sw.checkLogAndBlock(ctx, f, countFailsMap, endBytesMap)
 				}
 			}
 			time.Sleep(sleepMinutes)
 		}
 	}(time.Duration(int64(time.Minute) * int64(config.Get().ServiceCheckMinutes)))
 
-	func() {
-		for {
-			select {
-			case <-ctx.Done():
-				stop()
+	select {
+	case <-ctx.Done():
+		stop()
 
-				if err := endBytesMap.WriteToFile(saveMapFile); err != nil {
-					log.Printf("Save endBytesMap to file %s, err:%s", saveMapFile, err.Error())
-				}
-
-				if pprofEnd != nil {
-					pprofEnd.Stop()
-				}
-				os.Exit(2)
-			default:
-				time.Sleep(time.Second)
-			}
+		if err := endBytesMap.WriteToFile(saveMapFile); err != nil {
+			log.Printf("Save endBytesMap to file %s, err:%s", saveMapFile, err.Error())
 		}
-	}()
+
+		if pprofEnd != nil {
+			pprofEnd.Stop()
+		}
+		os.Exit(2)
+
+	}
+
 }

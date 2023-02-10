@@ -11,11 +11,11 @@ import (
 	"os"
 )
 
-func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap, endBytesMap storage.SyncMap) {
-	file, errO := os.Open(service.LogFile)
+func (s *serviceWork) checkLogAndBlock(ctx context.Context, sysFile string, countFailsMap, endBytesMap storage.SyncMap) {
+	file, errO := os.Open(sysFile)
 	f, err := file.Stat()
 	if (err != nil) && (errO != nil) {
-		log.Println("Local service, can't open log file ", service.LogFile, err)
+		log.Println("Local service, can't open log file ", sysFile, err)
 		return
 	}
 	defer file.Close()
@@ -23,8 +23,8 @@ func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap
 	//To start reading
 	var startByte int64
 
-	//Keep last file size - by log file and service name
-	key := service.Name + service.LogFile
+	//Keep last file size
+	key := sysFile
 
 	endByte := endBytesMap.Load(key)
 
@@ -50,23 +50,26 @@ func checkLogAndBlock(ctx context.Context, service config.Service, countFailsMap
 		return
 	}
 
-	findBytes := []byte(service.Regxp)
-
+	// String in file
 	for _, bySt := range bytes.Split(buf, []byte{'\n'}) {
-		if !bytes.Contains(bySt, findBytes) {
-			continue
-		}
-		ip, err := validator.CheckIp(string(bySt))
+		// String for find
+		for _, findBytes := range s.FindSt {
 
-		if err == nil {
-			countFailsMap.Increment(ip)
-			count := int(countFailsMap.Load(ip))
+			if !bytes.Contains(bySt, findBytes) {
+				continue
+			}
+			ip, err := validator.CheckIp(string(bySt))
 
-			if count == config.Get().ServiceFails {
+			if err == nil {
+				countFailsMap.Increment(ip)
+				count := int(countFailsMap.Load(ip))
 
-				go firewall.BlockIP(ctx, ip)
+				if count == config.Get().ServiceFails {
 
-				log.Printf("Block localservice: %s ip: %s", service.Name, ip)
+					go firewall.BlockIP(ctx, ip)
+
+					log.Printf("Block localservice: %s ip: %s", s.Name, ip)
+				}
 			}
 		}
 	}
