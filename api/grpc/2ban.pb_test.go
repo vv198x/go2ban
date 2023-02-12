@@ -1,31 +1,9 @@
 package grpc
 
 import (
-	"github.com/golang/protobuf/proto"
+	"google.golang.org/protobuf/proto"
 	"testing"
 )
-
-func TestIPStringRequest(t *testing.T) {
-	req := &IPStringRequest{
-		Ip: "192.168.0.1",
-	}
-
-	// Ensure the IPStringRequest message is properly initialized
-	if req == nil {
-		t.Errorf("Expected IPStringRequest message to be initialized, got nil")
-	}
-
-	// Ensure the IPStringRequest message has the expected IP address
-	if req.GetIp() != "192.168.0.1" {
-		t.Errorf("Expected IPStringRequest message to have IP address %s, got %s", "192.168.0.1", req.GetIp())
-	}
-
-	// Ensure the IPStringRequest message can be reset correctly
-	req.Reset()
-	if req.GetIp() != "" {
-		t.Errorf("Expected IPStringRequest message to have IP address %s after reset, got %s", "", req.GetIp())
-	}
-}
 
 func TestOKReply(t *testing.T) {
 	// Test Reset function

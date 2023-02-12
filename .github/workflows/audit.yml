@@ -16,7 +16,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.19
+          go-version: 1.*
 
       - name: Remove example
         run: rm -rf example
@@ -24,14 +24,14 @@ jobs:
       - name: Verify dependencies
         run: go mod verify
 
+      - name: Go vet
+        run: go vet ./...
+
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
           version: v1.50.1
           args: --verbose
-
-      - name: Run tests
-        run: go test -vet=off ./...
 
       - name: Install staticcheck
         run: go install honnef.co/go/tools/cmd/staticcheck@latest

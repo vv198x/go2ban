@@ -2,7 +2,6 @@ package logger
 
 import (
 	"github.com/vv198x/go2ban/config"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -12,26 +11,12 @@ import (
 )
 
 func TestStart(t *testing.T) {
-	defer func() {
-		log.SetOutput(os.Stderr)
-		if logFile != nil {
-			logFile.Close()
-			os.Remove(logFile.Name())
-		}
-	}()
-
-	// set up a temp directory for the log file
-	tempDir, err := ioutil.TempDir("/tmp", "")
-	if err != nil {
-		t.Fatalf("failed to create temp directory: %v", err)
-	}
-	defer os.RemoveAll(tempDir)
-	config.Get().LogDir = tempDir
+	config.Get().LogDir = "/tmp"
 
 	// call Start and check if the log file has been created
 	Start()
-	logFilePath := filepath.Join(tempDir, time.Now().Format("06.01.02")+logExp)
-	_, err = os.Stat(logFilePath)
+	logFilePath := filepath.Join("/tmp", time.Now().Format("06.01.02")+logExp)
+	_, err := os.Stat(logFilePath)
 	if err != nil {
 		t.Fatalf("log file not created: %v", err)
 	}
@@ -39,10 +24,23 @@ func TestStart(t *testing.T) {
 	// write some log messages and check if they are written to the log file
 	log.Println("test log message 1")
 	log.Println("test log message 2")
-	content, err := ioutil.ReadFile(logFilePath)
-	if err != nil {
-		t.Fatalf("failed to read log file: %v", err)
+	file, openError := os.Open(logFilePath)
+	if openError != nil {
+		t.Fatalf("The log file could not be opened: %v", openError)
 	}
+	defer file.Close()
+
+	stat, statError := file.Stat()
+	if statError != nil {
+		t.Fatalf("The log file stat could not be retrieved: %v", statError)
+	}
+
+	content := make([]byte, stat.Size())
+	_, readError := file.Read(content)
+	if readError != nil {
+		t.Fatalf("The log file could not be read: %v", readError)
+	}
+
 	expected := "test log message 2\n"
 	if !strings.Contains(string(content), expected) {
 		t.Fatalf("unexpected log file content, expected: %q, got: %q", expected, string(content))

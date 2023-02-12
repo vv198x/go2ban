@@ -14,9 +14,8 @@ func init() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 }
 
-var logFile *os.File
-
 func Start() {
+	var logFile *os.File
 	logFilePath := filepath.Join(
 		config.Get().LogDir,
 		time.Now().Format("06.01.02")+logExp)

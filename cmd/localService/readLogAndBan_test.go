@@ -31,7 +31,6 @@ Feb 20 11:09:41 fedora sudo[2365]: Failed password 1.2.3.4 ion closed for user r
 	}
 	type args struct {
 		ctx           context.Context
-		sysFile       string
 		countFailsMap storage.SyncMap
 		endBytesMap   storage.SyncMap
 	}
@@ -107,6 +106,10 @@ Feb 20 11:09:41 fedora sudo[2365]: Failed password 1.2.3.4 ion closed for user r
 	})
 
 	err = os.Remove(testFile)
+	if err != nil {
+		t.Fatalf("Failed to remove file: %v", err)
+	}
+	err = os.Remove(testMapFile)
 	if err != nil {
 		t.Fatalf("Failed to remove file: %v", err)
 	}

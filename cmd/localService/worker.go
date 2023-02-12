@@ -46,6 +46,7 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 	// Service for docker
 	if len(dockerSts) > 0 {
 		if dockerSysLogs, err := docker.GetListsSyslogFiles(); err == nil {
+
 			servicesWork = append(servicesWork, serviceWork{
 				Name:        config.IsDocker,
 				FindSt:      dockerSts,
@@ -78,10 +79,8 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 		}
 	}(time.Duration(int64(time.Minute) * int64(config.Get().ServiceCheckMinutes)))
 
-	select {
-	case <-ctx.Done():
-		stop()
-
+	<-ctx.Done()
+	{
 		if err := endBytesMap.WriteToFile(saveMapFile); err != nil {
 			log.Printf("Save endBytesMap to file %s, err:%s", saveMapFile, err.Error())
 		}
@@ -89,7 +88,7 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 		if pprofEnd != nil {
 			pprofEnd.Stop()
 		}
-		os.Exit(2)
 
+		os.Exit(2)
 	}
 }
