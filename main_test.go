@@ -21,9 +21,9 @@ func newVersion(name string) *version {
 	v := &version{}
 
 	if len(s) >= 4 {
-		v.major, _ = strconv.Atoi(s[1])
-		v.minor, _ = strconv.Atoi(s[2])
-		v.patch, _ = strconv.Atoi(s[3])
+		v.major, _ = strconv.Atoi(s[1]) //no lint
+		v.minor, _ = strconv.Atoi(s[2]) //no lint
+		v.patch, _ = strconv.Atoi(s[3]) //no lint
 	} else {
 		return nil
 	}
@@ -43,7 +43,7 @@ func TestVersionInChangeLog(t *testing.T) {
 
 	sha := strings.TrimSuffix(string(shaOut), "\n")
 
-	out, err := exec.Command("git", "describe", "--tags", sha, "--always").Output()
+	out, err := exec.Command("git", "describe", "--tags", "--always", sha).Output()
 	if err != nil {
 		t.Error(string(out))
 		t.Fatal("git describe: ", err)
