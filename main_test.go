@@ -36,7 +36,6 @@ func TestVersionInChangeLog(t *testing.T) {
 	t.Parallel()
 
 	shaOut, err := exec.Command("git", "rev-list", "--tags", "--max-count=1").Output()
-	t.Error(string(shaOut))
 	if err != nil {
 		t.Error(string(shaOut))
 		t.Fatal("git rev-list: ", err)
