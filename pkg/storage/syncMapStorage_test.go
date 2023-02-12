@@ -41,3 +41,24 @@ func TestStorageMap(t *testing.T) {
 		t.Fatalf("Failed to remove file: %v", err)
 	}
 }
+
+func Test_storageMap_Increment(t *testing.T) {
+	sm := NewStorageMap()
+
+	tests := []struct {
+		name string
+		key  string
+		val  int64
+	}{
+		{"Check no Increment", "counter1", 9},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			sm.Save(tt.key, tt.val)
+			sm.Increment(tt.key)
+			if sm.Load(tt.key) != tt.val {
+				t.Fatalf("Increment work")
+			}
+		})
+	}
+}

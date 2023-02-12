@@ -92,4 +92,5 @@ func TestVersionInChangeLog(t *testing.T) {
 	case code.patch < tag.patch: // 1.0.0 < 1.0.1 bad
 		t.Error("Bad PATCH version")
 	}
+	main()
 }
