@@ -13,8 +13,8 @@ func TestStart(t *testing.T) {
 		name        string
 		runAsDaemon bool
 	}{
-		{"Run as Daemon", true},
-		{"Not run as Daemon", false},
+		{"Start and Run as Daemon", true},
+		{"Start and Not run as Daemon", false},
 	}
 
 	for _, tt := range tests {
