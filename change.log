@@ -38,6 +38,7 @@ Reading logs of local services, not from the beginning of the file, but from the
 1.0.0
 + Lint check
 + Readme
-1.0.5 //add tag
+1.0.5
 + Add mock firewall
 + Log files in docker are checked at once all lines
++ Fixed key bug in map storage
