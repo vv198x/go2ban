@@ -1,7 +1,6 @@
 package config
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 )
@@ -36,9 +35,20 @@ local_service_fails=2 #comment
     {"On":true,"Name":"shandow_socks","Regxp": "authentication error","LogFile":"docker"}
   ]
 }`
-	err := ioutil.WriteFile(exportCfg.Flags.ConfigFile, []byte(testConfigData), 0644)
+	file, err := os.Create(exportCfg.Flags.ConfigFile)
+	if err != nil {
+		t.Fatalf("Error creating test config file: %v", err)
+	}
+	defer file.Close()
+
+	_, err = file.Write([]byte(testConfigData))
 	if err != nil {
 		t.Fatalf("Error writing test config file: %v", err)
+	}
+
+	err = file.Sync()
+	if err != nil {
+		t.Fatalf("Error syncing test config file: %v", err)
 	}
 
 	// Read file

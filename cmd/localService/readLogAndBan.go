@@ -4,18 +4,18 @@ import (
 	"bytes"
 	"context"
 	"github.com/vv198x/go2ban/cmd/firewall"
+	"github.com/vv198x/go2ban/cmd/validator"
 	"github.com/vv198x/go2ban/config"
 	"github.com/vv198x/go2ban/pkg/storage"
-	"github.com/vv198x/go2ban/pkg/validator"
 	"log"
 	"os"
 )
 
-func (s *serviceWork) checkLogAndBlock(ctx context.Context, sysFile string, countFailsMap, endBytesMap storage.SyncMap) {
-	file, errO := os.Open(sysFile)
+func (s *serviceWork) checkLogAndBlock(ctx context.Context, logFile string, countFailsMap, endBytesMap storage.SyncMap) {
+	file, errO := os.Open(logFile)
 	f, err := file.Stat()
 	if (err != nil) && (errO != nil) {
-		log.Println("Local service, can't open log file ", sysFile, err)
+		log.Println("Local service, can't open log file ", logFile, err)
 		return
 	}
 	defer file.Close() //nolint
@@ -23,8 +23,8 @@ func (s *serviceWork) checkLogAndBlock(ctx context.Context, sysFile string, coun
 	//To start reading
 	var startByte int64
 
-	//Keep last file size
-	key := s.Name + sysFile
+	//Keep last file size, service name + file
+	key := s.Name + logFile
 
 	endByte := endBytesMap.Load(key)
 

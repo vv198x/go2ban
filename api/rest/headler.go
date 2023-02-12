@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/vv198x/go2ban/cmd/firewall"
-	"github.com/vv198x/go2ban/pkg/validator"
+	"github.com/vv198x/go2ban/cmd/validator"
 	"log"
 	"net/http"
 )

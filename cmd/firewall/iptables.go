@@ -46,13 +46,16 @@ func (fw *iptables) Worker() {
 			cfgMaxLocked := config.Get().BlockedIps
 			if count > 0 && cfgMaxLocked < count {
 				start := time.Now()
-				for i := 0; i < (count-cfgMaxLocked)+cfgMaxLocked/10; i++ {
+
+				// Delete ip up to (maximum allowed - 10%). One at a time, old ones first
+				beRemoved := (count - cfgMaxLocked) + cfgMaxLocked/10
+				for i := 0; i < beRemoved; i++ {
 					err = runCMD("iptables --table raw --delete go2ban 1")
 					if err != nil && err.Error() != "exit status 1" {
 						log.Println("Can't del ip ", err)
 					}
 				}
-				log.Printf("Worker Iptables clear %d in %.2f seconds", count, time.Since(start).Seconds())
+				log.Printf("Worker Iptables clear %d in %.2f seconds", beRemoved, time.Since(start).Seconds())
 			}
 			time.Sleep(time.Hour * sleepHour)
 		}

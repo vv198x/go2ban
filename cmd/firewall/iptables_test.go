@@ -91,7 +91,7 @@ func findIptales(s string) bool {
 func getRandomIP() string {
 	rand.Seed(time.Now().UTC().UnixNano())
 	ip := fmt.Sprintf("%d.%d.%d.%d",
-		1+rand.Intn(255-1), 0+rand.Intn(255-0), 0+rand.Intn(255-0), 1+rand.Intn(254-1))
+		1+rand.Intn(254-1), 0+rand.Intn(255-0), 0+rand.Intn(255-0), 1+rand.Intn(253-1))
 	return ip
 }
 

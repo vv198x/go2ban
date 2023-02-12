@@ -3,9 +3,9 @@ package fakeSocks
 import (
 	"context"
 	"github.com/vv198x/go2ban/cmd/firewall"
+	"github.com/vv198x/go2ban/cmd/validator"
 	"github.com/vv198x/go2ban/config"
 	"github.com/vv198x/go2ban/pkg/storage"
-	"github.com/vv198x/go2ban/pkg/validator"
 	"log"
 	"net"
 	"strconv"

@@ -58,6 +58,7 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
+	// In-memory cache
 	countFailsMap := storage.NewCountersMap()
 	endBytesMap := storage.NewStorageMap()
 
