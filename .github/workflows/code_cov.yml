@@ -24,6 +24,12 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
 
+      - name: Fetch all tags
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+      - name: Last tag
+        run: git describe --tags $(git rev-list --tags --max-count=1) --always
+
       - name: Remove example
         run: rm -rf example
 
