@@ -7,22 +7,6 @@ import (
 	"testing"
 )
 
-func TestRunCMD(t *testing.T) {
-	firewallCMD := "echo hello"
-	err := runCMD(firewallCMD)
-	if err != nil {
-		t.Errorf("Expected error to be nil but got %v", err)
-	}
-
-	firewallCMD = "invalid_command"
-	err = runCMD(firewallCMD)
-	if err == nil {
-		t.Errorf("Expected error but got nil")
-	} else {
-		fmt.Printf("firewallCMD: %s\n", firewallCMD)
-		fmt.Printf("error: %v\n", err)
-	}
-}
 func TestRunOutputCMD(t *testing.T) {
 	firewallCMD := "echo hello"
 	output, err := runOutputCMD(firewallCMD)
@@ -42,6 +26,22 @@ func TestRunOutputCMD(t *testing.T) {
 		fmt.Printf("error: %v\n", err)
 	}
 }
+func TestRunCMD(t *testing.T) {
+	firewallCMD := "echo hello"
+	err := runCMD(firewallCMD)
+	if err != nil {
+		t.Errorf("Expected error to be nil but got %v", err)
+	}
+
+	firewallCMD = "invalid_command"
+	err = runCMD(firewallCMD)
+	if err == nil {
+		t.Errorf("Expected error but got nil")
+	} else {
+		fmt.Printf("firewallCMD: %s\n", firewallCMD)
+		fmt.Printf("error: %v\n", err)
+	}
+}
 
 func TestInitialization(t *testing.T) {
 	tests := []struct {
@@ -50,8 +50,8 @@ func TestInitialization(t *testing.T) {
 		runAsDaemon    bool
 		wantFirewall   string
 	}{
-		{"Test iptables", config.IsIptables, true, "*firewall.iptables"},
 		{"Test mock", config.IsMock, false, "*firewall.Mock"},
+		{"Test iptables", config.IsIptables, true, "*firewall.iptables"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
