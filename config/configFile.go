@@ -15,7 +15,7 @@ func Load() {
 	}
 
 	if !osUtil.CheckFile(exportCfg.Flags.ConfigFile) {
-		log.Fatalln("Config file not found")
+		log.Fatalf("Config file not found, file: %v", exportCfg.Flags.ConfigFile)
 	}
 
 	cfgSt, err := osUtil.ReadStsFile(exportCfg.Flags.ConfigFile)
@@ -37,11 +37,12 @@ func Load() {
 		}
 		splitSt := strings.Split(line, "=")
 		if line[0] != byte('#') && len(splitSt) > 0 {
-
+			// Start JSON data
 			if line == "{" {
 				for _, jsonSt := range cfgSt[i:] {
 					jsonData = append(jsonData, jsonSt[:]...)
 				}
+				// JSON data at the end of the file, break the loop
 				break
 			}
 
@@ -120,17 +121,5 @@ func whatFirewall() (firewallType string) {
 	} else {
 		log.Fatalln("iptables not found")
 	}
-	/*systemdEnableServiceDir := "/etc/systemd/system/multi-user.target.wants/"
-	firewalls := []string{
-		"firewalld", //"ufw",//"shorewall",
-		"iptables",
-	}
-	for _, firewall := range firewalls {
-		serviceFile := filepath.Join(systemdEnableServiceDir, firewall+".service")
-		if osUtil.CheckFile(serviceFile) {
-			return firewall
-		}
-	}
-	log.Fatalln("Firewall not found")*/
 	return
 }

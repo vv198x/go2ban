@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"os/exec"
 	"regexp"
@@ -32,8 +33,8 @@ func newVersion(name string) *version {
 }
 
 func TestVersionInChangeLog(t *testing.T) {
-	changeLogFile := "change.log"
 	t.Parallel()
+	changeLogFile := "change.log"
 
 	shaOut, err := exec.Command("git", "rev-list", "--tags", "--max-count=1").Output()
 	if err != nil {
@@ -92,5 +93,33 @@ func TestVersionInChangeLog(t *testing.T) {
 	case code.patch < tag.patch: // 1.0.0 < 1.0.1 bad
 		t.Error("Bad PATCH version")
 	}
+
+}
+
+func TestStartMain(t *testing.T) {
+	configFile := "/tmp/config.main"
+	os.Args = []string{"cmd", fmt.Sprintf("--cfgFile=%s", configFile)}
+
+	file, err := os.Create(configFile)
+	if err != nil {
+		t.Fatalf("Error creating test config file: %v", err)
+	}
+	defer file.Close()
+
+	_, err = file.Write([]byte("firewall=auto"))
+	if err != nil {
+		t.Fatalf("Error writing test config file: %v", err)
+	}
+
+	err = file.Sync()
+	if err != nil {
+		t.Fatalf("Error syncing test config file: %v", err)
+	}
+
 	main()
+
+	err = os.Remove(configFile)
+	if err != nil {
+		t.Fatalf("Failed to remove file: %v", err)
+	}
 }
