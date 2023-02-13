@@ -1,4 +1,4 @@
-name: Go  # The name of the workflow that will appear on Github
+name: Go coverage  # The name of the workflow that will appear on Github
 
 on:
   push:

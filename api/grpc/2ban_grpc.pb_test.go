@@ -1,3 +1,4 @@
+// nolint
 // The file is auto-generated, to test the auto-generated grpc go file
 // Google tests needed here
 package grpc

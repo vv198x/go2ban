@@ -106,7 +106,7 @@ func TestStartMain(t *testing.T) {
 	}
 	defer file.Close()
 
-	_, err = file.Write([]byte("firewall=auto"))
+	_, err = file.Write([]byte(`firewall=auto`))
 	if err != nil {
 		t.Fatalf("Error writing test config file: %v", err)
 	}
