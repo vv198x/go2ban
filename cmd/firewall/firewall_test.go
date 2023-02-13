@@ -53,6 +53,7 @@ func TestInitialization(t *testing.T) {
 		{"Test mock", config.IsMock, false, "*firewall.Mock"},
 		{"Test iptables", config.IsIptables, true, "*firewall.iptables"},
 	}
+	backFW := config.Get().Firewall
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			config.Get().Firewall = tt.configFirewall
@@ -62,4 +63,5 @@ func TestInitialization(t *testing.T) {
 			}
 		})
 	}
+	config.Get().Firewall = backFW
 }
