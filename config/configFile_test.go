@@ -109,3 +109,29 @@ local_service_fails=2 #comment
 		t.Fatalf("Failed to remove file: %v", err)
 	}
 }
+
+func Test_whatFirewall(t *testing.T) {
+	tests := []struct {
+		name             string
+		wantFirewallType string
+		wantErr          bool
+	}{
+		{
+			name:             "iptables found",
+			wantFirewallType: "iptables",
+			wantErr:          false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			defer func() {
+				if r := recover(); r != nil && !tt.wantErr {
+					t.Errorf("whatFirewall() panicked = %v, wantErr %v", r, tt.wantErr)
+				}
+			}()
+			if gotFirewallType := whatFirewall(); gotFirewallType != tt.wantFirewallType {
+				t.Errorf("whatFirewall() = %v, want %v", gotFirewallType, tt.wantFirewallType)
+			}
+		})
+	}
+}

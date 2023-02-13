@@ -2,6 +2,8 @@ package firewall
 
 import (
 	"fmt"
+	"github.com/vv198x/go2ban/config"
+	"reflect"
 	"testing"
 )
 
@@ -38,5 +40,26 @@ func TestRunOutputCMD(t *testing.T) {
 	} else {
 		fmt.Printf("firewallCMD: %s\n", firewallCMD)
 		fmt.Printf("error: %v\n", err)
+	}
+}
+
+func TestInitialization(t *testing.T) {
+	tests := []struct {
+		name           string
+		configFirewall string
+		runAsDaemon    bool
+		wantFirewall   string
+	}{
+		{"Test iptables", config.IsIptables, true, "*firewall.iptables"},
+		{"Test mock", config.IsMock, false, "*firewall.Mock"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			config.Get().Firewall = tt.configFirewall
+			Initialization(tt.runAsDaemon)
+			if fmt.Sprintf("%T", ExportFirewall) != tt.wantFirewall {
+				t.Errorf("Initialization() = %v, want %v", reflect.TypeOf(ExportFirewall), tt.wantFirewall)
+			}
+		})
 	}
 }
