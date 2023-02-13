@@ -123,6 +123,9 @@ func Test_iptables_countBlocked(t *testing.T) {
 }
 
 func Test_iptables_UnlockAll(t *testing.T) {
+	fw.Worker()
+	time.Sleep(time.Millisecond * 100)
+
 	tests := []struct {
 		name    string
 		wantErr bool
@@ -134,10 +137,10 @@ func Test_iptables_UnlockAll(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if i == 1 {
 				if err := runCMD("iptables --table raw --delete PREROUTING --jump go2ban"); err != nil {
-					t.Errorf("runCMD error")
+					t.Errorf("runCMD error %v", err)
 				}
 				if err := runCMD("iptables --table raw --delete-chain go2ban"); err != nil {
-					t.Errorf("runCMD error")
+					t.Errorf("runCMD error %v", err)
 				}
 			}
 			_, err := fw.UnlockAll(context.Background())
