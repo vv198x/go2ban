@@ -7,8 +7,6 @@ import (
 	"os/exec"
 )
 
-const sleepHour = 12
-
 type Firewall interface {
 	Block(ctx context.Context, ip string)
 	Worker()

@@ -33,6 +33,7 @@ const (
 	IsDocker              = "docker"
 	IsIptables            = "iptables"
 	IsMock                = "mock"
+	WorkerSleepHour       = 12
 )
 
 var exportCfg = Cfg{}

@@ -6,12 +6,12 @@ import (
 	"github.com/vv198x/go2ban/cmd/firewall"
 	"github.com/vv198x/go2ban/cmd/validator"
 	"github.com/vv198x/go2ban/config"
-	"github.com/vv198x/go2ban/pkg/storage"
+	"github.com/vv198x/go2ban/storage"
 	"log"
 	"os"
 )
 
-func (s serviceWork) checkLogAndBlock(ctx context.Context, logFile string, countFailsMap, endBytesMap storage.SyncMap) {
+func (s serviceWork) checkLogAndBlock(ctx context.Context, logFile string, countFailsMap, endBytesMap storage.Storage) {
 	file, errO := os.Open(logFile)
 	f, err := file.Stat()
 	if (err != nil) && (errO != nil) {

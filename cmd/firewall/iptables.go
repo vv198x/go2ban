@@ -57,7 +57,7 @@ func (fw *iptables) Worker() {
 				}
 				log.Printf("Worker Iptables clear %d in %.2f seconds", beRemoved, time.Since(start).Seconds())
 			}
-			time.Sleep(time.Hour * sleepHour)
+			time.Sleep(time.Hour * config.WorkerSleepHour)
 		}
 	}()
 }

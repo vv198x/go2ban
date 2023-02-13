@@ -5,7 +5,7 @@ import (
 	"context"
 	"github.com/vv198x/go2ban/cmd/firewall"
 	"github.com/vv198x/go2ban/config"
-	"github.com/vv198x/go2ban/pkg/storage"
+	"github.com/vv198x/go2ban/storage"
 	"log"
 	"os"
 	"strings"
@@ -16,8 +16,8 @@ import (
 func Test_serviceWork_checkLogAndBlock(t *testing.T) {
 	firewall.ExportFirewall = &firewall.Mock{}
 	// In-memory cache
-	countFailsMap := storage.NewCountersMap()
-	endBytesMap := storage.NewStorageMap()
+	countFailsMap := storage.NewSyncMap()
+	endBytesMap := storage.NewSyncMap()
 	testFile := "/tmp/test.log"
 	testData := `
 Feb 20 11:09:41 fedora sudo[2365]: Failed password 1.2.3.4 ion closed for user root
@@ -31,8 +31,8 @@ Feb 20 11:09:41 fedora sudo[2365]: Failed password 1.2.3.4 ion closed for user r
 	}
 	type args struct {
 		ctx           context.Context
-		countFailsMap storage.SyncMap
-		endBytesMap   storage.SyncMap
+		countFailsMap storage.Storage
+		endBytesMap   storage.Storage
 	}
 	defaultArg := args{
 		ctx:           context.Background(),
@@ -90,7 +90,7 @@ Feb 20 11:09:41 fedora sudo[2365]: Failed password 1.2.3.4 ion closed for user r
 			t.Errorf("Don`t save map")
 		}
 
-		endBytesMap = storage.NewStorageMap()
+		endBytesMap = storage.NewSyncMap()
 
 		if err = endBytesMap.ReadFromFile(testMapFile); err != nil {
 			t.Errorf("Don`t read map")

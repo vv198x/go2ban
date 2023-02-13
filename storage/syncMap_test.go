@@ -5,8 +5,22 @@ import (
 	"testing"
 )
 
-func TestStorageMap(t *testing.T) {
-	sm := NewStorageMap()
+func TestCounters(t *testing.T) {
+	c := NewSyncMap()
+
+	c.Increment("key1")
+	if c.Load("key1") != 1 {
+		t.Errorf("Expected value for key1 to be 1, got %d", c.Load("key1"))
+	}
+
+	c.Increment("key1")
+	if c.Load("key1") != 2 {
+		t.Errorf("Expected value for key1 to be 2, got %d", c.Load("key1"))
+	}
+}
+
+func TestSaveAndRead(t *testing.T) {
+	sm := NewSyncMap()
 	sm.Save("counter1", 100)
 	sm.Save("counter2", 200)
 
@@ -18,7 +32,7 @@ func TestStorageMap(t *testing.T) {
 	}
 
 	// Read the map from file into a new map
-	sm2 := NewStorageMap()
+	sm2 := NewSyncMap()
 	err = sm2.ReadFromFile(fileMap)
 	if err != nil {
 		t.Fatalf("Error reading the map from file: %v", err)
@@ -39,26 +53,5 @@ func TestStorageMap(t *testing.T) {
 	err = os.Remove(fileMap)
 	if err != nil {
 		t.Fatalf("Failed to remove file: %v", err)
-	}
-}
-
-func Test_storageMap_Increment(t *testing.T) {
-	sm := NewStorageMap()
-
-	tests := []struct {
-		name string
-		key  string
-		val  int64
-	}{
-		{"Check no Increment", "counter1", 9},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			sm.Save(tt.key, tt.val)
-			sm.Increment(tt.key)
-			if sm.Load(tt.key) != tt.val {
-				t.Fatalf("Increment work")
-			}
-		})
 	}
 }

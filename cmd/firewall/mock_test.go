@@ -62,3 +62,17 @@ func TestMock_countBlocked(t *testing.T) {
 		t.Fatalf("Expected number of blocked IPs to be 0, but got: %d", ips)
 	}
 }
+
+func TestMock_Worker(t *testing.T) {
+	t.Run("Get log", func(t *testing.T) {
+		var buf bytes.Buffer
+		log.SetOutput(&buf)
+		defer log.SetOutput(os.Stderr)
+		fw := &Mock{}
+		fw.Worker()
+		if !strings.Contains(buf.String(), "Mock firewall worker") {
+			t.Errorf("Expected log message not found")
+		}
+	})
+
+}

@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/vv198x/go2ban/config"
 	"github.com/vv198x/go2ban/pkg/docker"
-	"github.com/vv198x/go2ban/pkg/storage"
+	"github.com/vv198x/go2ban/storage"
 	"log"
 	"os"
 	"os/signal"
@@ -60,8 +60,8 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 	defer stop()
 
 	// In-memory cache
-	countFailsMap := storage.NewCountersMap()
-	endBytesMap := storage.NewStorageMap()
+	countFailsMap := storage.NewSyncMap()
+	endBytesMap := storage.NewSyncMap()
 
 	saveMapFile := filepath.Join(config.Get().LogDir, nameMapFile)
 	if err := endBytesMap.ReadFromFile(saveMapFile); err != nil {

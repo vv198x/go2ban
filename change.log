@@ -11,8 +11,7 @@ removing 1000 rules takes 20 milliseconds!
 0.0.3
 + add auto remove from end of list
 + The chain is now added directly to the "raw" table.
-What is the first rules of the docker. Five times less CPU load.
-And connections cannot stay in "established" status, which is important in DDOS.
+Five times less CPU load.
 0.0.4
 + Added traps: "fake socks" Opens local ports
 When scanning ports, the scanner freezes.
@@ -42,3 +41,5 @@ Reading logs of local services, not from the beginning of the file, but from the
 + Add mock firewall
 + Log files in docker are checked at once all lines
 + Fixed key bug in map storage
+1.1.0 // next
++ One sync map

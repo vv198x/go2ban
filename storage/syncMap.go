@@ -6,18 +6,24 @@ import (
 	"sync"
 )
 
-type storageMap struct {
+type syncMap struct {
 	mx sync.RWMutex
 	m  map[string]int64
 }
 
-func NewStorageMap() *storageMap {
-	return &storageMap{
+func NewSyncMap() *syncMap {
+	return &syncMap{
 		m: make(map[string]int64),
 	}
 }
 
-func (c *storageMap) Load(key string) int64 {
+func (c *syncMap) Increment(key string) {
+	c.mx.Lock()
+	defer c.mx.Unlock()
+	c.m[key]++
+}
+
+func (c *syncMap) Load(key string) int64 {
 	c.mx.RLock()
 	defer c.mx.RUnlock()
 
@@ -25,14 +31,14 @@ func (c *storageMap) Load(key string) int64 {
 	return val
 }
 
-func (c *storageMap) Save(key string, v int64) {
+func (c *syncMap) Save(key string, v int64) {
 	c.mx.Lock()
 	defer c.mx.Unlock()
 
 	c.m[key] = v
 }
 
-func (c *storageMap) ReadFromFile(fileMap string) error {
+func (c *syncMap) ReadFromFile(fileMap string) error {
 	c.mx.RLock()
 	defer c.mx.RUnlock()
 
@@ -57,7 +63,8 @@ func (c *storageMap) ReadFromFile(fileMap string) error {
 
 	return err
 }
-func (c *storageMap) WriteToFile(fileMap string) error {
+
+func (c *syncMap) WriteToFile(fileMap string) error {
 	c.mx.Lock()
 	defer c.mx.Unlock()
 
@@ -77,7 +84,4 @@ func (c *storageMap) WriteToFile(fileMap string) error {
 
 	}
 	return err
-}
-
-func (c *storageMap) Increment(key string) {
 }

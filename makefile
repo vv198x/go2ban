@@ -22,11 +22,8 @@ install: build
 clean:
 	rm $(GO2BAN_BINARY)
 
-lint:
-	golangci-lint run $(go list ./... | grep -v example)
-
 test:
-	sudo go test $(go list ./... | grep -v example)
+	sudo go test -v $(go list ./... | grep -v example)
 
-.PHONY: build install clean lint test
+.PHONY: build install clean test
 .DEFAULT_GOAL := build
