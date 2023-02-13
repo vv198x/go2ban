@@ -24,17 +24,14 @@ jobs:
       - name: Verify dependencies
         run: go mod verify
 
-      - name: Go vet
-        run: go vet $(go list ./... | grep -v grpc)
-
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
           version: v1.50.1
-          args: --verbose --disable=govet
+          args: --verbose
 
       - name: Install staticcheck
         run: go install honnef.co/go/tools/cmd/staticcheck@latest
 
       - name: Run staticcheck
-        run: staticcheck $(go list ./... | grep -v grpc)
+        run: staticcheck ./...
