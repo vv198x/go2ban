@@ -3,6 +3,7 @@ package localService
 import (
 	"context"
 	"flag"
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"github.com/vv198x/go2ban/cmd/firewall"
 	"github.com/vv198x/go2ban/config"
@@ -42,9 +43,12 @@ func TestWorkerStart(t *testing.T) {
 
 	t.Run("Check that the map file was saved correctly", func(t *testing.T) {
 		WorkerStart(mockCtx, true, []config.Service{service1}, nil)
-		time.Sleep(time.Millisecond * 50)
+		time.Sleep(time.Millisecond * 100)
 		file, err := os.ReadFile("/tmp/endBytesMap")
 		assert.NoError(t, err)
+		file2, err := os.ReadFile(service1.LogFile)
+		assert.NoError(t, err)
+		fmt.Println(string(file2))
 		assert.Contains(t, string(file), service1.Name+service1.LogFile)
 	})
 }
