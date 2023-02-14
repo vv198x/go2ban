@@ -4,7 +4,7 @@ import (
 	"github.com/vv198x/go2ban/config"
 	"log"
 	"net/http"
-	"strconv"
+	"regexp"
 )
 
 func Start(runAsDaemon bool) {
@@ -15,13 +15,12 @@ func Start(runAsDaemon bool) {
 				return
 			}
 
-			_, err := strconv.Atoi(port)
-			if err != nil {
-				log.Println("Wrong port REST Server ", err)
+			if !regexp.MustCompile(`(\d)+`).MatchString(port) {
+				log.Println("Wrong port REST Server ")
 				return
 			}
 
-			err = http.ListenAndServe(":"+port, nil)
+			err := http.ListenAndServe(":"+port, nil)
 			if err != nil {
 				log.Fatalln("Can't start REST server ", err)
 			}

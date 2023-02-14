@@ -21,10 +21,11 @@ type serviceWork struct {
 	SysLogFiles []string
 }
 
-func WorkerStart(mockCtx context.Context, services []config.Service, pprofEnd interface{ Stop() }) {
-	if !config.Get().Flags.RunAsDaemon {
+func WorkerStart(mockCtx context.Context, runAsDaemon bool, services []config.Service, pprofEnd interface{ Stop() }) {
+	if !runAsDaemon {
 		return
 	}
+
 	// If docker add up all search strings in array
 	dockerSts := make([][]byte, 0)
 	servicesWork := make([]serviceWork, 0)
@@ -94,6 +95,8 @@ func WorkerStart(mockCtx context.Context, services []config.Service, pprofEnd in
 			pprofEnd.Stop()
 		}
 
-		os.Exit(2)
+		if mockCtx == nil {
+			os.Exit(2)
+		}
 	}
 }

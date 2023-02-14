@@ -22,5 +22,9 @@ func main() {
 	fakeSocks.Listen(config.Get().FakeSocksPorts)
 	rest.Start(config.Get().Flags.RunAsDaemon)
 	grpc.Start(config.Get().Flags.RunAsDaemon)
-	localService.WorkerStart(nil, config.Get().Services, pprofEnd)
+	localService.WorkerStart(
+		nil, // Mock context
+		config.Get().Flags.RunAsDaemon,
+		config.Get().Services,
+		pprofEnd) // To stop profiling
 }
