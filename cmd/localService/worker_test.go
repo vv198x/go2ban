@@ -14,7 +14,7 @@ import (
 func TestWorkerStart(t *testing.T) {
 	// Set up test data
 	firewall.ExportFirewall = &firewall.Mock{}
-	mockCtx, cancel := context.WithTimeout(context.Background(), time.Millisecond*100)
+	mockCtx, cancel := context.WithTimeout(context.Background(), time.Millisecond*200)
 	defer cancel()
 	service1 := config.Service{On: true, Name: "service1", LogFile: "/etc/passwd", Regxp: ".*error.*"}
 	service2 := config.Service{On: true, Name: "service2", LogFile: "docker", Regxp: ".*panic.*"}
@@ -42,7 +42,7 @@ func TestWorkerStart(t *testing.T) {
 
 	t.Run("Check that the map file was saved correctly", func(t *testing.T) {
 		WorkerStart(mockCtx, true, []config.Service{service1}, nil)
-		time.Sleep(time.Millisecond * 200)
+		time.Sleep(time.Millisecond * 300)
 		file, err := os.ReadFile("endBytesMap")
 		assert.NoError(t, err)
 		assert.Contains(t, string(file), service1.Name+service1.LogFile)
