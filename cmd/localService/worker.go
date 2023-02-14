@@ -21,7 +21,7 @@ type serviceWork struct {
 	SysLogFiles []string
 }
 
-func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
+func WorkerStart(mockCtx context.Context, services []config.Service, pprofEnd interface{ Stop() }) {
 	if !config.Get().Flags.RunAsDaemon {
 		return
 	}
@@ -58,6 +58,11 @@ func WorkerStart(services []config.Service, pprofEnd interface{ Stop() }) {
 	// Context for get exit signal, save map to file
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
+
+	// Change to a context with a timeout for the test
+	if mockCtx != nil {
+		ctx = mockCtx
+	}
 
 	// In-memory cache
 	countFailsMap := storage.NewSyncMap()

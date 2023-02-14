@@ -60,7 +60,7 @@ func FindIpOnByte(sts string) string {
 		point := (b == '.')
 		if ('0' <= b && b <= '9') && (C < 15) || point {
 			if point {
-				P++
+				P++ // Point counter
 				I = 0
 			}
 			if I <= 3 { // Block of 3 numbers
