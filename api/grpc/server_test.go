@@ -50,7 +50,9 @@ func TestStart2(t *testing.T) {
 	config.Get().GrpcPort = "8080/tcp"
 	runAsDaemon := true
 	Start(runAsDaemon)
-	time.Sleep(100 * time.Millisecond)                            // wait for goroutine to start
+	// wait for goroutine to start
+	time.Sleep(100 * time.Millisecond)
+	//lint:ignore SA1019 use WithTransportCredentials
 	conn, err := grpc.Dial("localhost:8080", grpc.WithInsecure()) // nolint
 	if err != nil {
 		t.Errorf("Failed to dial gRPC server: %v", err)
