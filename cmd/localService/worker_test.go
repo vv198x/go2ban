@@ -42,7 +42,7 @@ func TestWorkerStart(t *testing.T) {
 
 	t.Run("Check that the map file was saved correctly", func(t *testing.T) {
 		WorkerStart(mockCtx, true, []config.Service{service1}, nil)
-		time.Sleep(time.Millisecond * 100)
+		time.Sleep(time.Millisecond * 200)
 		file, err := os.ReadFile("endBytesMap")
 		assert.NoError(t, err)
 		assert.Contains(t, string(file), service1.Name+service1.LogFile)

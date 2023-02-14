@@ -4,7 +4,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/vv198x/go2ban)](https://goreportcard.com/report/github.com/vv198x/go2ban)
 
 # go2ban
-![alt text](deploy/gophers.png)
+![](deploy/gophers.png)
 
 **go2ban** is a service for protecting VDS and VPS from password brute force, scanners and DDoS attacks. It uses firewall rules to block malicious IPs and also checks the log files of services such as databases, webservers and even those in docker containers. Additionally it features whitelisting, fake trap ports, REST and gRPC servers to manually block IPs. All these features combined provide a comprehensive solution for safeguarding your systems from malicious attacks.
 
