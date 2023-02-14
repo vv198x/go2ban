@@ -3,7 +3,6 @@ package localService
 import (
 	"context"
 	"flag"
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"github.com/vv198x/go2ban/cmd/firewall"
 	"github.com/vv198x/go2ban/config"
@@ -25,10 +24,10 @@ func TestWorkerStart(t *testing.T) {
 	// Reset the flags before the test
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	config.Get().ServiceCheckMinutes = 2
-	config.Get().LogDir = "/tmp"
+	config.Get().LogDir = "."
 
 	t.Run("Test the function with the RunAsDaemon flag false", func(t *testing.T) {
-		WorkerStart(nil, false, []config.Service{}, nil)
+		WorkerStart(context.TODO(), false, []config.Service{}, nil)
 		// If it does not wait without a mock context, then everything is OK
 	})
 
@@ -44,11 +43,8 @@ func TestWorkerStart(t *testing.T) {
 	t.Run("Check that the map file was saved correctly", func(t *testing.T) {
 		WorkerStart(mockCtx, true, []config.Service{service1}, nil)
 		time.Sleep(time.Millisecond * 100)
-		file, err := os.ReadFile("/tmp/endBytesMap")
+		file, err := os.ReadFile("endBytesMap")
 		assert.NoError(t, err)
-		file2, err := os.ReadFile(service1.LogFile)
-		assert.NoError(t, err)
-		fmt.Println(string(file2))
 		assert.Contains(t, string(file), service1.Name+service1.LogFile)
 	})
 }
