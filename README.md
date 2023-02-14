@@ -3,8 +3,26 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/vv198x/go2ban.svg)](https://pkg.go.dev/github.com/vv198x/go2ban)
 [![Go Report Card](https://goreportcard.com/badge/github.com/vv198x/go2ban)](https://goreportcard.com/report/github.com/vv198x/go2ban)
 
-## go2ban
-go2ban is a service for protecting VDS and VPS from password brute force, scanners and DDoS attacks. It uses firewall rules to block malicious IPs and also checks the log files of services such as databases, webservers and even those in docker containers. Additionally it features whitelisting, fake trap ports, REST and gRPC servers to manually block IPs. All these features combined provide a comprehensive solution for safeguarding your systems from malicious attacks.
+# go2ban
+![alt text](deploy/gophers.png)
+
+**go2ban** is a service for protecting VDS and VPS from password brute force, scanners and DDoS attacks. It uses firewall rules to block malicious IPs and also checks the log files of services such as databases, webservers and even those in docker containers. Additionally it features whitelisting, fake trap ports, REST and gRPC servers to manually block IPs. All these features combined provide a comprehensive solution for safeguarding your systems from malicious attacks.
+
+### Configuration
+The [config](deploy/go2ban.conf) file allows for various settings to be customized, including:
+
+* **firewall**: can be set to "auto" for automatic firewall rule management or "off" to disable firewall functionality.
+* **log_dir**: directory for go2ban log files.
+* **white_list**: IP addresses or subnets that will never be blocked.
+* **grpc_port**: port for gRPC communication (default is off).
+* **blocked_ips**: maximum number of IPs that can be blocked at one time.
+* **fake_socks_ports**: local ports to be opened and appear to the scanner as open, but will not respond to connections (default is off).
+* **fake_socks_fails**: number of failed connection attempts before an IP is blocked.
+* **rest_port**: port for manual IP blocking through REST requests (default is off).
+* **local_service_check_minutes**: frequency of checking local services for brute force attempts.
+* **local_service_fails**: number of failed attempts before an IP is blocked.
+* Additionally, the config file allows for the customization of **local service** checks, with options to specify the service name, regular expression for detecting failed attempts, and log file location. You can tell docker to check all files syslog in containers.
+
 
 ### Installation
 1. Prerequisites: Make sure that you have a working Go development environment and that you have Go version >=1.15 installed on your machine.
@@ -37,23 +55,6 @@ systemctl start go2ban
 ``` 
 systemctl enable go2ban
 ```    
-
-
-
-### Configuration
-The config file allows for various settings to be customized, including:
-
-* **firewall**: can be set to "auto" for automatic firewall rule management or "off" to disable firewall functionality.
-* **log_dir**: directory for go2ban log files.
-* **white_list**: IP addresses or subnets that will never be blocked.
-* **grpc_port**: port for gRPC communication (default is off).
-* **blocked_ips**: maximum number of IPs that can be blocked at one time.
-* **fake_socks_ports**: local ports to be opened and appear to the scanner as open, but will not respond to connections (default is off).
-* **fake_socks_fails**: number of failed connection attempts before an IP is blocked.
-* **rest_port**: port for manual IP blocking through REST requests (default is off).
-* **local_service_check_minutes**: frequency of checking local services for brute force attempts.
-* **local_service_fails**: number of failed attempts before an IP is blocked.
-* Additionally, the config file allows for the customization of **local service** checks, with options to specify the service name, regular expression for detecting failed attempts, and log file location. You can tell docker to check all files syslog in containers.
 
 ### Command-line:
 ```
