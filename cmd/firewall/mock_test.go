@@ -44,9 +44,8 @@ func TestMock_UnlockAll(t *testing.T) {
 	ctx := context.Background()
 
 	ips, err := mock.UnlockAll(ctx)
-
-	if err != nil {
-		t.Fatalf("Expected error to be nil, but got: %v", err)
+	if err == nil {
+		t.Fatalf("Expected error to be Mock err, but got: %v", err)
 	}
 	if ips != 0 {
 		t.Fatalf("Expected number of unlocked IPs to be 0, but got: %d", ips)

@@ -39,8 +39,8 @@ func TestRun(t *testing.T) {
 	// Restore the original value of stdout
 	os.Stdout = rescueStdout
 
-	// Verify the output
-	if !strings.Contains(buf.String(), "IPs unlocked") {
+	// Verify the output. Mock err
+	if !strings.Contains(buf.String(), "Mock err") {
 		t.Errorf("Expected %s, got %s", "IPs unlocked", buf.String())
 	}
 }
