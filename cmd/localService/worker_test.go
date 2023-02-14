@@ -16,7 +16,7 @@ func TestWorkerStart(t *testing.T) {
 	firewall.ExportFirewall = &firewall.Mock{}
 	mockCtx, cancel := context.WithTimeout(context.Background(), time.Millisecond*200)
 	defer cancel()
-	//service1 := config.Service{On: true, Name: "service1", LogFile: "/etc/passwd", Regxp: ".*error.*"}
+	service1 := config.Service{On: true, Name: "service1", LogFile: "/etc/passwd", Regxp: ".*error.*"}
 	service2 := config.Service{On: true, Name: "service2", LogFile: "docker", Regxp: ".*panic.*"}
 	service3 := config.Service{On: true, LogFile: "test.log", Name: "docker", Regxp: "pattern2"}
 	service4 := config.Service{On: false, LogFile: "test2.log", Name: "Service 3", Regxp: "pattern3"}
@@ -31,13 +31,17 @@ func TestWorkerStart(t *testing.T) {
 		// If it does not wait without a mock context, then everything is OK
 	})
 
-	t.Run("Test the function with a mock context and off log file", func(t *testing.T) {
+	t.Run("Test the function with a mock context and off log wrong file", func(t *testing.T) {
 		WorkerStart(mockCtx, true, []config.Service{service4}, nil)
 
 	})
 
 	t.Run("Test the function with a mock context and docker logfile", func(t *testing.T) {
 		WorkerStart(mockCtx, true, []config.Service{service2, service3}, nil)
+	})
+
+	t.Run("Test the function with a mock context and docker logfile", func(t *testing.T) {
+		WorkerStart(mockCtx, true, []config.Service{service1}, nil)
 	})
 
 	t.Run("Check that the map file was saved correctly", func(t *testing.T) {
