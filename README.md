@@ -71,11 +71,11 @@ go2ban runs as a background service, continually monitoring for malicious IPs an
 
 ### Blocking in the iptables(netfilter) raw table has several advantages, including:
 
-**Speed**: The raw table is the earliest table in the iptables firewall rule evaluation, allowing for quick and efficient blocking of incoming packets.
+1. [x]  **Speed**: The raw table is the earliest table in the iptables firewall rule evaluation, allowing for quick and efficient blocking of incoming packets.
 
-**Security**: The raw table provides a strong first line of defense against incoming network traffic, helping to prevent malicious activity from reaching other parts of the system.
+2. [x] **Security**: The raw table provides a strong first line of defense against incoming network traffic, helping to prevent malicious activity from reaching other parts of the system.
 
-**Connection don't established**: Blocking traffic in the raw table ensures that the connection never even opens, which can be useful for mitigating DDoS attacks and reducing CPU load.
+3. [x] **Connection don't established**: Blocking traffic in the raw table ensures that the connection never even opens, which can be useful for mitigating DDoS attacks and reducing CPU load.
 
 ### Development
 The go2ban service is developed in Go and makes use of iptables for firewall management. The codebase is open-source and contributions are welcome.

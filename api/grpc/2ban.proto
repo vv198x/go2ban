@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "./apiForgRPC";
+option go_package = "./grpc";
 service IP2ban {
   rpc IP (IPStringRequest) returns (OKReply) {}
 }
