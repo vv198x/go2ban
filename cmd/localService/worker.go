@@ -61,7 +61,7 @@ func WorkerStart(mockCtx context.Context, runAsDaemon bool, services []config.Se
 	defer stop()
 
 	// Change to a context with a timeout for the test
-	if mockCtx != nil {
+	if mockCtx != context.TODO() {
 		ctx = mockCtx
 	}
 
@@ -95,7 +95,7 @@ func WorkerStart(mockCtx context.Context, runAsDaemon bool, services []config.Se
 			pprofEnd.Stop()
 		}
 
-		if mockCtx == nil {
+		if mockCtx == context.TODO() {
 			os.Exit(2)
 		}
 	}

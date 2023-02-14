@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"github.com/vv198x/go2ban/api/grpc"
 	"github.com/vv198x/go2ban/api/rest"
 	"github.com/vv198x/go2ban/cmd/commandLine"
@@ -23,7 +24,7 @@ func main() {
 	rest.Start(config.Get().Flags.RunAsDaemon)
 	grpc.Start(config.Get().Flags.RunAsDaemon)
 	localService.WorkerStart(
-		nil, // Mock context
+		context.TODO(),
 		config.Get().Flags.RunAsDaemon,
 		config.Get().Services,
 		pprofEnd) // To stop profiling

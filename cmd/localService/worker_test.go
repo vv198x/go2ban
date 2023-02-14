@@ -16,7 +16,7 @@ func TestWorkerStart(t *testing.T) {
 	firewall.ExportFirewall = &firewall.Mock{}
 	mockCtx, cancel := context.WithTimeout(context.Background(), time.Millisecond*100)
 	defer cancel()
-	service1 := config.Service{On: true, Name: "service1", LogFile: "/etc/fstab", Regxp: ".*error.*"}
+	service1 := config.Service{On: true, Name: "service1", LogFile: "/etc/passwd", Regxp: ".*error.*"}
 	service2 := config.Service{On: true, Name: "service2", LogFile: "docker", Regxp: ".*panic.*"}
 	service3 := config.Service{On: true, LogFile: "test.log", Name: "docker", Regxp: "pattern2"}
 	service4 := config.Service{On: false, LogFile: "test2.log", Name: "Service 3", Regxp: "pattern3"}
