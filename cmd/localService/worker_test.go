@@ -40,7 +40,7 @@ func TestWorkerStart(t *testing.T) {
 		WorkerStart(mockCtx, true, []config.Service{service2, service3}, nil)
 	})
 
-	t.Run("Test the function with a mock context and docker logfile", func(t *testing.T) {
+	t.Run("Test the function with a mock context and logfile", func(t *testing.T) {
 		WorkerStart(mockCtx, true, []config.Service{service1}, nil)
 	})
 

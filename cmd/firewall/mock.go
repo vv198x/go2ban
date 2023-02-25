@@ -20,3 +20,8 @@ func (fw *Mock) UnlockAll(ctx context.Context) (ips int, err error) {
 func (fw *Mock) countBlocked() (ips int) {
 	return 0
 }
+func (fw *Mock) GetBlocked() map[string]struct{} {
+	m := make(map[string]struct{})
+	m["123.123.123.123"] = struct{}{}
+	return m
+}

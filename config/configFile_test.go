@@ -22,8 +22,10 @@ white_list=192.168.0.1 192.168.0.* #comment
 
 grpc_port=111/tcp #comment
 blocked_ips=9000 #comment
-fake_socks_ports=22 21 3389 #comment
-fake_socks_fails=2 #comment
+trap_ports=22 21 3389 #comment
+trap_fails=2 #comment
+abuseipdb_apikey=secret #default off
+abuseipdb_ips=2001
 rest_port=222 #comment
 local_service_check_minutes=2 #comment
 local_service_fails=2 #comment
@@ -78,12 +80,12 @@ local_service_fails=2 #comment
 		t.Fatalf("Incorrect BlockedIps value")
 	}
 
-	if exportCfg.FakeSocksPorts[2] != 3389 {
-		t.Fatalf("Incorrect FakeSocksPorts value")
+	if exportCfg.TrapPorts[2] != 3389 {
+		t.Fatalf("Incorrect TrapPorts value")
 	}
 
-	if exportCfg.FakeSocksFails != 2 {
-		t.Fatalf("Incorrect FakeSocksFails value")
+	if exportCfg.TrapFails != 2 {
+		t.Fatalf("Incorrect TrapFails value")
 	}
 
 	if exportCfg.ServiceCheckMinutes != 2 {
@@ -92,6 +94,14 @@ local_service_fails=2 #comment
 
 	if exportCfg.ServiceFails != 2 {
 		t.Fatalf("Incorrect ServiceFails value")
+	}
+
+	if exportCfg.AbuseipdbIPs != 2001 {
+		t.Fatalf("Incorrect AbuseipdbIPs value")
+	}
+
+	if exportCfg.AbuseipdbApiKey != "secret" {
+		t.Fatalf("Incorrect AbuseipdbApiKey value")
 	}
 
 	if exportCfg.Services[1].On {

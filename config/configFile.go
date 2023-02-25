@@ -25,9 +25,10 @@ func Load() {
 
 	exportCfg.LogDir = defaultLogDir
 	exportCfg.BlockedIps = defaultBlockedIps
-	exportCfg.FakeSocksFails = defaultFakeSocksFails
+	exportCfg.TrapFails = defaultFakeSocksFails
 	exportCfg.ServiceCheckMinutes = defaultServiceCheck
 	exportCfg.ServiceFails = defaultServiceFails
+	exportCfg.AbuseipdbIPs = defaultAbuseipdbIPs
 
 	jsonData := make([]byte, 0)
 
@@ -79,18 +80,18 @@ func Load() {
 			case "white_list":
 				exportCfg.WhiteList = params
 
-			case "fake_socks_ports":
+			case "trap_ports":
 				bufPorts := params
 				for _, port := range bufPorts {
 					portInt, err := strconv.Atoi(port)
 					if err == nil {
-						exportCfg.FakeSocksPorts = append(exportCfg.FakeSocksPorts, portInt)
+						exportCfg.TrapPorts = append(exportCfg.TrapPorts, portInt)
 					}
 				}
-			case "fake_socks_fails":
+			case "trap_fails":
 				fails, err := strconv.Atoi(params[0])
 				if err == nil {
-					exportCfg.FakeSocksFails = fails
+					exportCfg.TrapFails = fails
 				}
 
 			case "local_service_check_minutes":
@@ -102,6 +103,14 @@ func Load() {
 				fails, err := strconv.Atoi(params[0])
 				if err == nil {
 					exportCfg.ServiceFails = fails
+				}
+
+			case "abuseipdb_apikey":
+				exportCfg.AbuseipdbApiKey = params[0]
+			case "abuseipdb_ips":
+				ips, err := strconv.Atoi(params[0])
+				if err == nil {
+					exportCfg.AbuseipdbIPs = ips
 				}
 			}
 		}

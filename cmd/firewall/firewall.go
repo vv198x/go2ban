@@ -12,6 +12,7 @@ type Firewall interface {
 	Worker()
 	UnlockAll(ctx context.Context) (ips int, err error)
 	countBlocked() (ips int)
+	GetBlocked() map[string]struct{}
 }
 
 var ExportFirewall Firewall

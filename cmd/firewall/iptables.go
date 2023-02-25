@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"github.com/vv198x/go2ban/config"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -79,4 +81,20 @@ func (fw *iptables) countBlocked() (ips int) {
 		ips = bytes.Count(byt, []byte("A go2ban"))
 	}
 	return
+}
+
+func (fw *iptables) GetBlocked() map[string]struct{} {
+	byt, err := runOutputCMD("iptables-save")
+	if err != nil {
+		log.Println("iptables-save error", err)
+		return nil
+	}
+	m := make(map[string]struct{})
+
+	for _, st := range bytes.Split(byt, []byte("\n")) {
+		var buf string
+		fmt.Sscanf(string(st), "-A go2ban -s %s/32 -j DROP", &buf)
+		m[strings.TrimSuffix(buf, "/32")] = struct{}{}
+	}
+	return m
 }

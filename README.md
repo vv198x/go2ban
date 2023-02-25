@@ -15,10 +15,12 @@ The [config](deploy/go2ban.conf) file allows for various settings to be customiz
 * **log_dir**: directory for go2ban log files.
 * **white_list**: IP addresses or subnets that will never be blocked.
 * **grpc_port**: port for gRPC communication (default is off).
-* **blocked_ips**: maximum number of IPs that can be blocked at one time.
-* **fake_socks_ports**: local ports to be opened and appear to the scanner as open, but will not respond to connections (default is off).
-* **fake_socks_fails**: number of failed connection attempts before an IP is blocked.
 * **rest_port**: port for manual IP blocking through REST requests (default is off).
+* **blocked_ips**: maximum number of IPs that can be blocked at one time.
+* **abuseipdb_apikey**: specify the API key for AbuseIPDB, a free service that allows you to check if an IP address has been reported for malicious activity such as spamming, hacking, or other forms of abuse. By default, this option is disabled.
+* **abuseipdb_ips**: number of blacklisted IP addresses that AbuseIPDB will request to block.
+* **trap_ports**: local ports to be opened and appear to the scanner as open, but will not respond to connections (default is off).
+* **trap_fails**: number of failed connection attempts before an IP is blocked.
 * **local_service_check_minutes**: frequency of checking local services for brute force attempts.
 * **local_service_fails**: number of failed attempts before an IP is blocked.
 * Additionally, the config file allows for the customization of **local service** checks, with options to specify the service name, regular expression for detecting failed attempts, and log file location. You can tell docker to check all files syslog in containers.

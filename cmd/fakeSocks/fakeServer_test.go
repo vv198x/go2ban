@@ -30,7 +30,7 @@ func TestListen(t *testing.T) {
 	ports := []int{1024, 1025}
 
 	config.Get().Flags.RunAsDaemon = true
-	config.Get().FakeSocksFails = 3
+	config.Get().TrapFails = 3
 	// Start the listener in a separate goroutine
 	done := make(chan struct{})
 	go func() {

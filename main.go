@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/vv198x/go2ban/api/grpc"
 	"github.com/vv198x/go2ban/api/rest"
+	"github.com/vv198x/go2ban/cmd/abuseipdb"
 	"github.com/vv198x/go2ban/cmd/commandLine"
 	"github.com/vv198x/go2ban/cmd/fakeSocks"
 	"github.com/vv198x/go2ban/cmd/firewall"
@@ -18,11 +19,12 @@ func main() {
 	config.ReadFlags()
 	config.Load()
 	logger.Start()
-	commandLine.Run()
 	firewall.Initialization(config.Get().Flags.RunAsDaemon)
-	fakeSocks.Listen(config.Get().FakeSocksPorts)
+	commandLine.Run()
+	fakeSocks.Listen(config.Get().TrapPorts)
 	rest.Start(config.Get().Flags.RunAsDaemon)
 	grpc.Start(config.Get().Flags.RunAsDaemon)
+	abuseipdb.Scheduler(config.Get().AbuseipdbApiKey)
 	localService.WorkerStart(
 		context.TODO(),
 		config.Get().Flags.RunAsDaemon,

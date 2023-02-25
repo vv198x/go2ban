@@ -7,9 +7,11 @@ type Cfg struct {
 	GrpcPort            string
 	RestPort            string
 	BlockedIps          int
+	AbuseipdbApiKey     string
+	AbuseipdbIPs        int
 	WhiteList           []string
-	FakeSocksPorts      []int
-	FakeSocksFails      int
+	TrapPorts           []int
+	TrapFails           int
 	ServiceCheckMinutes int
 	ServiceFails        int
 	Services            []Service `json:"Service"`
@@ -30,10 +32,11 @@ const (
 	defaultFakeSocksFails = 2
 	defaultServiceCheck   = 2
 	defaultServiceFails   = 2
+	defaultAbuseipdbIPs   = 2000
 	IsDocker              = "docker"
 	IsIptables            = "iptables"
 	IsMock                = "mock"
-	WorkerSleepHour       = 12
+	WorkerSleepHour       = 6
 )
 
 var exportCfg = Cfg{}

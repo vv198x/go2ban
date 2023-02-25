@@ -122,6 +122,17 @@ func Test_iptables_countBlocked(t *testing.T) {
 	}
 }
 
+func Test_iptables_GiveBlocked(t *testing.T) {
+	t.Run("Check end", func(t *testing.T) {
+		fw.Block(context.Background(), "123.123.123.123")
+		ips := fw.GetBlocked()
+		if _, find := ips["123.123.123.123"]; !find {
+			t.Errorf("GetBlocked wrong ip")
+		}
+	})
+
+}
+
 func Test_iptables_UnlockAll(t *testing.T) {
 	fw.Worker()
 	time.Sleep(time.Millisecond * 100)

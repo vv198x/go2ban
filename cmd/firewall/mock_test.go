@@ -75,3 +75,12 @@ func TestMock_Worker(t *testing.T) {
 	})
 
 }
+
+func TestMock_GetBlocked(t *testing.T) {
+	mock := &Mock{}
+
+	ips := mock.GetBlocked()
+	if _, find := ips["123.123.123.123"]; !find {
+		t.Errorf("GetBlocked wrong ip")
+	}
+}
