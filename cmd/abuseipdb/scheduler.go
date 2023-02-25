@@ -16,7 +16,7 @@ import (
 const urlBlacklist = "https://api.abuseipdb.com/api/v2/blacklist/"
 
 func Scheduler(apiKey string) {
-	if !config.Get().Flags.RunAsDaemon || config.Get().AbuseipdbApiKey == "" {
+	if !config.Get().Flags.RunAsDaemon || apiKey == "" {
 		return
 	}
 
