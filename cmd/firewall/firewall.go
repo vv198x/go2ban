@@ -35,7 +35,7 @@ func Initialization(runAsDaemon bool) {
 		return
 	}
 
-	go ExportFirewall.Worker()
+	ExportFirewall.Worker()
 }
 
 func runCMD(firewallCMD string) error {

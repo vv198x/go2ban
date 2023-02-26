@@ -14,14 +14,11 @@ import (
 type iptables struct{}
 
 func (fw *iptables) Block(ctx context.Context, ip string) {
-	start := time.Now()
 
 	err := runCMD("iptables --table raw --append go2ban --source " + ip + " --jump DROP")
 	if err != nil {
 		log.Println("Not blocked ", ip, err)
 	}
-
-	log.Println("Blocked in milliseconds: ", time.Since(start).Milliseconds())
 }
 
 func (fw *iptables) Worker() {
@@ -43,6 +40,7 @@ func (fw *iptables) Worker() {
 	}
 	log.Println("Iptables: add chain go2ban to table raw")
 	go func() {
+		time.Sleep(time.Minute)
 		for {
 			count := fw.countBlocked()
 			cfgMaxLocked := config.Get().BlockedIps

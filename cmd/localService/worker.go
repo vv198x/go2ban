@@ -66,8 +66,8 @@ func WorkerStart(mockCtx context.Context, runAsDaemon bool, services []config.Se
 	}
 
 	// In-memory cache
-	countFailsMap := storage.NewSyncMap()
 	endBytesMap := storage.NewSyncMap()
+	countFailsMap := storage.NewSyncMap()
 
 	saveMapFile := filepath.Join(config.Get().LogDir, nameMapFile)
 	if err := endBytesMap.ReadFromFile(saveMapFile); err != nil {
