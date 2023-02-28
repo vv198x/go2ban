@@ -36,7 +36,9 @@ func blockBlackListIPs(apiKey string, urlBl string) {
 	minimumScore := 90
 
 	// Send GET request
-	req, err := http.NewRequest(http.MethodGet,
+	ctx, stop := context.WithTimeout(context.Background(), time.Second*10)
+	defer stop()
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet,
 		fmt.Sprintf("%s?confidenceMinimum=%d&limit=%d", urlBl, minimumScore, limit), nil)
 	if err != nil {
 		log.Println("Build req error", err)
