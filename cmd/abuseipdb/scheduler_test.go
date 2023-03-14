@@ -13,10 +13,10 @@ func TestScheduler(t *testing.T) {
 	firewall.ExportFirewall = &firewall.Mock{}
 	config.Get().Flags.RunAsDaemon = true
 	t.Run("empty api key", func(t *testing.T) {
-		Scheduler("")
+		go Scheduler("")
 	})
 	t.Run("not empty api key", func(t *testing.T) {
-		Scheduler("test")
+		go Scheduler("test")
 	})
 }
 

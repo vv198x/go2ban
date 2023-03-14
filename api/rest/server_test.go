@@ -1,12 +1,14 @@
 package rest
 
 import (
+	"github.com/vv198x/go2ban/cmd/firewall"
 	"github.com/vv198x/go2ban/config"
 	"testing"
 	"time"
 )
 
 func TestStart(t *testing.T) {
+	firewall.ExportFirewall = &firewall.Mock{}
 	tests := []struct {
 		name           string
 		runAsDaemon    bool
