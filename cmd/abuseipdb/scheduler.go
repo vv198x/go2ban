@@ -10,13 +10,14 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"regexp"
 	"time"
 )
 
 const urlBlacklist = "https://api.abuseipdb.com/api/v2/blacklist/"
 
 func Scheduler(apiKey string) {
-	if !config.Get().Flags.RunAsDaemon || apiKey == "" {
+	if !config.Get().Flags.RunAsDaemon || !regexp.MustCompile(`[\d\w]{80}`).MatchString(apiKey) {
 		return
 	}
 
