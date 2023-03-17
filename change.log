@@ -47,3 +47,4 @@ Reading logs of local services, not from the beginning of the file, but from the
 1.1.5
 + Added abuseipdb black list
 + Bugfix abuseipdb
++ Bugfix localservice

@@ -20,12 +20,14 @@ func Scheduler(apiKey string) {
 	if !config.Get().Flags.RunAsDaemon || !regexp.MustCompile(`[\d\w]{80}`).MatchString(apiKey) {
 		return
 	}
+	go func() {
+		ticker := time.NewTicker(config.WorkerSleepHour * time.Hour)
+		for {
+			go blockBlackListIPs(apiKey, urlBlacklist)
+			<-ticker.C
+		}
+	}()
 
-	ticker := time.NewTicker(config.WorkerSleepHour * time.Hour)
-	for {
-		go blockBlackListIPs(apiKey, urlBlacklist)
-		<-ticker.C
-	}
 }
 
 func blockBlackListIPs(apiKey string, urlBl string) {
