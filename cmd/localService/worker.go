@@ -78,7 +78,7 @@ func WorkerStart(mockCtx context.Context, runAsDaemon bool, services []config.Se
 			countFailsMap := storage.NewSyncMap()
 			for _, sw := range servicesWork {
 				for _, f := range sw.SysLogFiles {
-					go sw.checkLogAndBlock(ctx, f, countFailsMap, endBytesMap)
+					go checkLogAndBlock(ctx, sw, f, countFailsMap, endBytesMap)
 				}
 			}
 			time.Sleep(sleepMinutes)

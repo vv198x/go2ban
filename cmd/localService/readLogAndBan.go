@@ -11,7 +11,12 @@ import (
 	"os"
 )
 
-func (s serviceWork) checkLogAndBlock(ctx context.Context, logFile string, countFailsMap, endBytesMap storage.Storage) {
+func checkLogAndBlock(
+	ctx context.Context,
+	s serviceWork,
+	logFile string,
+	countFailsMap, endBytesMap storage.Storage) {
+
 	file, errO := os.Open(logFile)
 	f, err := file.Stat()
 	if (err != nil) && (errO != nil) {
