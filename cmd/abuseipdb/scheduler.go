@@ -52,7 +52,9 @@ func blockBlackListIPs(apiKey string, urlBl string) {
 	if err != nil {
 		log.Println("Send req Do error", err)
 	}
-	defer resp.Body.Close()
+	if resp.Body != nil {
+		defer resp.Body.Close()
+	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {

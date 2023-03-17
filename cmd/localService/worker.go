@@ -67,7 +67,6 @@ func WorkerStart(mockCtx context.Context, runAsDaemon bool, services []config.Se
 
 	// In-memory cache
 	endBytesMap := storage.NewSyncMap()
-	countFailsMap := storage.NewSyncMap()
 
 	saveMapFile := filepath.Join(config.Get().LogDir, nameMapFile)
 	if err := endBytesMap.ReadFromFile(saveMapFile); err != nil {
@@ -76,6 +75,7 @@ func WorkerStart(mockCtx context.Context, runAsDaemon bool, services []config.Se
 
 	go func(sleepMinutes time.Duration) {
 		for {
+			countFailsMap := storage.NewSyncMap()
 			for _, sw := range servicesWork {
 				for _, f := range sw.SysLogFiles {
 					go sw.checkLogAndBlock(ctx, f, countFailsMap, endBytesMap)
