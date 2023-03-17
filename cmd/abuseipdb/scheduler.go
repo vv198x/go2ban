@@ -23,7 +23,7 @@ func Scheduler(apiKey string) {
 	go func() {
 		ticker := time.NewTicker(config.WorkerSleepHour * time.Hour)
 		for {
-			go blockBlackListIPs(apiKey, urlBlacklist)
+			blockBlackListIPs(apiKey, urlBlacklist)
 			<-ticker.C
 		}
 	}()
