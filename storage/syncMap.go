@@ -82,6 +82,10 @@ func (c *syncMap) WriteToFile(fileMap string) error {
 			return errF
 		}
 
+		if err = f.Sync(); err != nil {
+			return err
+		}
+
 	}
 	return err
 }
