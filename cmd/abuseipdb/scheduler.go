@@ -39,9 +39,7 @@ func blockBlackListIPs(apiKey string, urlBl string) {
 	minimumScore := 90
 
 	// Send GET request
-	ctx, stop := context.WithTimeout(context.Background(), time.Second*10)
-	defer stop()
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet,
+	req, err := http.NewRequest(http.MethodGet,
 		fmt.Sprintf("%s?confidenceMinimum=%d&limit=%d", urlBl, minimumScore, limit), nil)
 	if err != nil {
 		log.Println("Build req error", err)
@@ -49,14 +47,24 @@ func blockBlackListIPs(apiKey string, urlBl string) {
 	req.Header.Set("Key", apiKey)
 	req.Header.Set("Accept", "text/plain")
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Println("Send req Do error", err)
+	client, resp := &http.Client{Timeout: time.Second * 10}, new(http.Response)
+
+	// Three attempts
+	for i := 0; i <= 3; i++ {
+		resp, err = client.Do(req)
+		if err != nil {
+			log.Printf("Send req Do error: %v, retrying %d...", err, i)
+			time.Sleep(time.Minute)
+			continue
+		}
+		break
 	}
-	if resp.Body != nil {
-		defer resp.Body.Close()
+
+	if resp.Body == nil {
+		log.Println("resp.Body = nil")
+		return
 	}
+	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {

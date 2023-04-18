@@ -15,7 +15,7 @@ func CheckIp(target string) (end string, err error) {
 
 	if target != "" && target[0] != '0' {
 		if target[len(target)-1] == '0' && target[len(target)-2] == '.' {
-			return "", err
+			return "", errors.New("wrong ip")
 		}
 
 		whiteAddress := osUtil.GetLocalIPs()
