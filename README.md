@@ -48,14 +48,10 @@ sudo make install
 ``` 
 vi /etc/go2ban/go2ban.conf
 ```    
-6. Start the service:
-``` 
-systemctl start go2ban
-```    
 
-7. Enable the service:
+6. Start and enable the service:
 ``` 
-systemctl enable go2ban
+sudo systemctl --now enable go2ban
 ```    
 
 ### Command-line:
