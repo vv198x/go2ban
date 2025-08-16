@@ -29,11 +29,14 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Check if running as root
+# Check if running as root and set sudo command
 check_root() {
     if [[ $EUID -eq 0 ]]; then
-        print_error "This script should not be run as root. Please run as a regular user."
-        exit 1
+        SUDO_CMD=""
+        print_status "Running as root - no sudo needed"
+    else
+        SUDO_CMD="sudo"
+        print_status "Running as regular user - will use sudo for privileged operations"
     fi
 }
 
@@ -80,7 +83,7 @@ install_from_release() {
     fi
     
     # Install binary
-    sudo install -m 755 go2ban /usr/local/bin/
+    $SUDO_CMD install -m 755 go2ban /usr/local/bin/
     rm go2ban
     
     print_success "go2ban binary installed to /usr/local/bin/go2ban"
@@ -118,8 +121,8 @@ install_go() {
     wget -q https://go.dev/dl/go1.21.6.linux-amd64.tar.gz
     
     print_status "Installing Go..."
-    sudo rm -rf /usr/local/go
-    sudo tar -C /usr/local -xzf go1.21.6.linux-amd64.tar.gz
+    $SUDO_CMD rm -rf /usr/local/go
+    $SUDO_CMD tar -C /usr/local -xzf go1.21.6.linux-amd64.tar.gz
     
     # Add Go to PATH
     export PATH=$PATH:/usr/local/go/bin
@@ -147,12 +150,12 @@ install_dependencies() {
     
     # Detect package manager
     if command -v apt-get &> /dev/null; then
-        sudo apt-get update
-        sudo apt-get install -y make git wget
+        $SUDO_CMD apt-get update
+        $SUDO_CMD apt-get install -y make git wget
     elif command -v yum &> /dev/null; then
-        sudo yum install -y make git wget
+        $SUDO_CMD yum install -y make git wget
     elif command -v dnf &> /dev/null; then
-        sudo dnf install -y make git wget
+        $SUDO_CMD dnf install -y make git wget
     else
         print_error "Unsupported package manager. Please install make, git, and wget manually."
         exit 1
@@ -191,15 +194,15 @@ install_service() {
     print_status "Installing go2ban service..."
     
     # Stop existing service if running
-    sudo systemctl stop go2ban 2>/dev/null || true
+    $SUDO_CMD systemctl stop go2ban 2>/dev/null || true
     
     # Create directories
-    sudo mkdir -p /var/log/go2ban /etc/go2ban
+    $SUDO_CMD mkdir -p /var/log/go2ban /etc/go2ban
     
     # Install binary (if not already installed from release)
     if [[ ! -f /usr/local/bin/go2ban ]]; then
         if [[ -f go2ban ]]; then
-            sudo install -m 755 go2ban /usr/local/bin/
+            $SUDO_CMD install -m 755 go2ban /usr/local/bin/
         else
             print_error "go2ban binary not found"
             exit 1
@@ -208,7 +211,7 @@ install_service() {
     
     # Install configuration
     if [[ -f deploy/go2ban.conf ]]; then
-        sudo install -m 644 deploy/go2ban.conf /etc/go2ban/
+        $SUDO_CMD install -m 644 deploy/go2ban.conf /etc/go2ban/
         print_success "Configuration installed to /etc/go2ban/go2ban.conf"
     else
         print_warning "Configuration file not found. You'll need to create it manually."
@@ -216,8 +219,8 @@ install_service() {
     
     # Install systemd service
     if [[ -f deploy/go2ban.service ]]; then
-        sudo install -m 644 deploy/go2ban.service /etc/systemd/system/
-        sudo systemctl daemon-reload
+        $SUDO_CMD install -m 644 deploy/go2ban.service /etc/systemd/system/
+        $SUDO_CMD systemctl daemon-reload
         print_success "Systemd service installed"
     else
         print_warning "Systemd service file not found. You'll need to create it manually."
@@ -237,7 +240,7 @@ configure_go2ban() {
         
         read -p "Press Enter to continue or Ctrl+C to skip..."
         
-        sudo nano /etc/go2ban/go2ban.conf
+        $SUDO_CMD nano /etc/go2ban/go2ban.conf
     else
         print_warning "Configuration file not found at /etc/go2ban/go2ban.conf"
     fi
@@ -251,14 +254,14 @@ start_service() {
     case $choice in
         [Yy]* )
             print_status "Starting go2ban service..."
-            sudo systemctl enable go2ban
-            sudo systemctl start go2ban
+            $SUDO_CMD systemctl enable go2ban
+            $SUDO_CMD systemctl start go2ban
             
             # Check service status
-            if sudo systemctl is-active --quiet go2ban; then
+            if $SUDO_CMD systemctl is-active --quiet go2ban; then
                 print_success "go2ban service started successfully"
                 print_status "Service status:"
-                sudo systemctl status go2ban --no-pager -l
+                $SUDO_CMD systemctl status go2ban --no-pager -l
             else
                 print_error "Failed to start go2ban service"
                 print_status "Check logs with: sudo journalctl -u go2ban -f"
