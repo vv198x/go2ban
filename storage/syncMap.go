@@ -6,24 +6,28 @@ import (
 	"sync"
 )
 
-type syncMap struct {
+// SyncMap provides a thread-safe map with file persistence capabilities
+type SyncMap struct {
 	mx sync.RWMutex
 	m  map[string]int64
 }
 
-func NewSyncMap() *syncMap {
-	return &syncMap{
+// NewSyncMap creates a new thread-safe map instance
+func NewSyncMap() *SyncMap {
+	return &SyncMap{
 		m: make(map[string]int64),
 	}
 }
 
-func (c *syncMap) Increment(key string) {
+// Increment increases the value for the given key by 1
+func (c *SyncMap) Increment(key string) {
 	c.mx.Lock()
 	defer c.mx.Unlock()
 	c.m[key]++
 }
 
-func (c *syncMap) Load(key string) int64 {
+// Load retrieves the value for the given key
+func (c *SyncMap) Load(key string) int64 {
 	c.mx.RLock()
 	defer c.mx.RUnlock()
 
@@ -31,16 +35,20 @@ func (c *syncMap) Load(key string) int64 {
 	return val
 }
 
-func (c *syncMap) Save(key string, v int64) {
+// Save sets the value for the given key
+func (c *SyncMap) Save(key string, v int64) {
 	c.mx.Lock()
 	defer c.mx.Unlock()
 
 	c.m[key] = v
 }
 
-func (c *syncMap) ReadFromFile(fileMap string) error {
-	c.mx.RLock()
-	defer c.mx.RUnlock()
+// ReadFromFile loads the map data from a JSON file
+func (c *SyncMap) ReadFromFile(fileMap string) error {
+	// Check if file exists
+	if _, err := os.Stat(fileMap); os.IsNotExist(err) {
+		return err
+	}
 
 	f, err := os.Open(fileMap)
 	if err != nil {
@@ -50,42 +58,54 @@ func (c *syncMap) ReadFromFile(fileMap string) error {
 
 	fileInfo, err := os.Stat(fileMap)
 	if err != nil {
+		os.Remove(fileMap)
 		return err
 	}
 
 	buf := make([]byte, fileInfo.Size())
 	_, err = f.Read(buf)
 	if err != nil {
+		os.Remove(fileMap)
 		return err
 	}
 
-	err = json.Unmarshal(buf, &c.m)
+	// Use write lock since we're modifying the map
+	c.mx.Lock()
+	defer c.mx.Unlock()
 
-	return err
+	err = json.Unmarshal(buf, &c.m)
+	if err != nil {
+		os.Remove(fileMap)
+		return err
+	}
+
+	return nil
 }
 
-func (c *syncMap) WriteToFile(fileMap string) error {
+// WriteToFile saves the map data to a JSON file
+func (c *SyncMap) WriteToFile(fileMap string) error {
 	c.mx.Lock()
 	defer c.mx.Unlock()
 
 	buf, err := json.Marshal(c.m)
-	if err == nil {
-
-		f, errF := os.OpenFile(fileMap, os.O_WRONLY|os.O_CREATE, 0644)
-		if errF != nil {
-			return errF
-		}
-		defer f.Close()
-
-		_, errF = f.Write(buf)
-		if errF != nil {
-			return errF
-		}
-
-		if err = f.Sync(); err != nil {
-			return err
-		}
-
+	if err != nil {
+		return err
 	}
-	return err
+
+	f, err := os.OpenFile(fileMap, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = f.Write(buf)
+	if err != nil {
+		return err
+	}
+
+	if err = f.Sync(); err != nil {
+		return err
+	}
+
+	return nil
 }
