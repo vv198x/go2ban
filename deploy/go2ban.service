@@ -8,7 +8,6 @@ User=root
 ExecStart=/usr/local/bin/go2ban -d
 Restart=always
 TimeoutStartSec=120s
-DelayStartSec=30s
 Environment=GO2BAN_LOG_DIR=/var/log/go2ban
 StandardOutput=file:/var/log/go2ban/go2ban.log
 StandardError=file:/var/log/go2ban/go2ban.err
