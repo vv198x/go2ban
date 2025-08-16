@@ -37,6 +37,56 @@ check_root() {
     fi
 }
 
+# Detect system architecture
+detect_architecture() {
+    ARCH=$(uname -m)
+    case $ARCH in
+        x86_64)
+            echo "amd64"
+            ;;
+        aarch64|arm64)
+            echo "arm64"
+            ;;
+        armv7l)
+            echo "arm"
+            ;;
+        *)
+            print_error "Unsupported architecture: $ARCH"
+            exit 1
+            ;;
+    esac
+}
+
+# Simple installation from release
+install_from_release() {
+    print_status "Installing go2ban from release binary..."
+    
+    ARCH=$(detect_architecture)
+    VERSION="v1.1.7"
+    BINARY_URL="https://raw.githubusercontent.com/vv198x/go2ban/main/releases/${VERSION}/go2ban-linux-${ARCH}"
+    
+    print_status "Detected architecture: $ARCH"
+    print_status "Downloading go2ban ${VERSION} for Linux ${ARCH}..."
+    
+    # Download binary
+    if wget -q --spider "$BINARY_URL"; then
+        wget -O go2ban "$BINARY_URL"
+        chmod +x go2ban
+        print_success "Binary downloaded successfully"
+    else
+        print_error "Binary not found for architecture $ARCH"
+        print_status "Falling back to build from source..."
+        return 1
+    fi
+    
+    # Install binary
+    sudo install -m 755 go2ban /usr/local/bin/
+    rm go2ban
+    
+    print_success "go2ban binary installed to /usr/local/bin/go2ban"
+    return 0
+}
+
 # Check and install Go
 check_go() {
     print_status "Checking Go installation..."
@@ -113,7 +163,7 @@ install_dependencies() {
 
 # Build go2ban
 build_go2ban() {
-    print_status "Building go2ban..."
+    print_status "Building go2ban from source..."
     
     # Ensure we're using the correct Go version
     export PATH=/usr/local/go/bin:$PATH
@@ -146,8 +196,15 @@ install_service() {
     # Create directories
     sudo mkdir -p /var/log/go2ban /etc/go2ban
     
-    # Install binary
-    sudo install -m 755 go2ban /usr/local/bin/
+    # Install binary (if not already installed from release)
+    if [[ ! -f /usr/local/bin/go2ban ]]; then
+        if [[ -f go2ban ]]; then
+            sudo install -m 755 go2ban /usr/local/bin/
+        else
+            print_error "go2ban binary not found"
+            exit 1
+        fi
+    fi
     
     # Install configuration
     if [[ -f deploy/go2ban.conf ]]; then
@@ -218,20 +275,72 @@ start_service() {
     esac
 }
 
-# Main installation function
-main() {
+# Show installation options
+show_options() {
     echo -e "${GREEN}================================${NC}"
     echo -e "${GREEN}  go2ban Installation Script${NC}"
     echo -e "${GREEN}================================${NC}"
     echo ""
+    echo -e "${BLUE}Choose installation method:${NC}"
+    echo "  1) Quick install from release (recommended)"
+    echo "     - Downloads pre-built binary"
+    echo "     - Fastest installation"
+    echo "     - No Go compilation required"
+    echo ""
+    echo "  2) Build from source"
+    echo "     - Compiles from source code"
+    echo "     - Requires Go 1.16+"
+    echo "     - Takes longer but ensures latest code"
+    echo ""
+    echo "  3) Exit"
+    echo ""
+}
+
+# Main installation function
+main() {
+    show_options
     
-    check_root
-    install_dependencies
-    check_go
-    build_go2ban
-    install_service
-    configure_go2ban
-    start_service
+    read -p "Enter your choice (1-3): " choice
+    
+    case $choice in
+        1)
+            echo ""
+            print_status "Starting quick installation from release..."
+            check_root
+            install_dependencies
+            if install_from_release; then
+                install_service
+                configure_go2ban
+                start_service
+            else
+                print_warning "Release installation failed, falling back to build from source..."
+                check_go
+                build_go2ban
+                install_service
+                configure_go2ban
+                start_service
+            fi
+            ;;
+        2)
+            echo ""
+            print_status "Starting build from source..."
+            check_root
+            install_dependencies
+            check_go
+            build_go2ban
+            install_service
+            configure_go2ban
+            start_service
+            ;;
+        3)
+            print_status "Installation cancelled"
+            exit 0
+            ;;
+        *)
+            print_error "Invalid choice. Please run the script again."
+            exit 1
+            ;;
+    esac
     
     echo ""
     echo -e "${GREEN}================================${NC}"
