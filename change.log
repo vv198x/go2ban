@@ -50,3 +50,8 @@ Reading logs of local services, not from the beginning of the file, but from the
 + Bugfix localservice
 1.1.6
 + Bugfix
+1.1.7
++ Fixed critical bug in storage system
++ Added simple installation script (install.sh)
++ Improved README with modern design and bot traffic statistics
++ Enhanced documentation with comprehensive configuration tables
