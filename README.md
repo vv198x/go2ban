@@ -31,6 +31,8 @@
 - **📈 Resource savings** — up to 70% reduction in CPU load
 - **🛡️ Whitelist** for trusted IP addresses
 
+> **📚 New!** [Performance Optimization Guide](OPTIMIZATION.md) — Learn how to fine-tune go2ban for maximum efficiency!
+
 ---
 
 ## 🚀 Quick Installation (Recommended)
@@ -119,6 +121,8 @@ The [config](deploy/go2ban.conf) file allows you to customize all aspects of ope
 |-----------|-------------|---------|
 | `abuseipdb_apikey` | API key for AbuseIPDB | `off` |
 | `abuseipdb_ips` | Number of IPs to block from AbuseIPDB | `100` |
+
+> **💡 Looking for optimization tips?** Check out our [Performance Optimization Guide](OPTIMIZATION.md) for best practices, benchmarks, and advanced tuning recommendations!
 
 ---
 
