@@ -55,3 +55,8 @@ Reading logs of local services, not from the beginning of the file, but from the
 + Added simple installation script (install.sh)
 + Improved README with modern design and bot traffic statistics
 + Enhanced documentation with comprehensive configuration tables
+1.1.8
+- Fixed nil pointer panic in abuseipdb scheduler when all HTTP retries fail (SIGSEGV crashed the whole daemon)
++ Recover from panics in the abuseipdb scheduler goroutine so a transient outage can't kill the daemon
+- Fixed wrong offset saved after a docker log file is recreated (container restart), which made checkLogAndBlock re-read the same file from byte 0 forever
++ Capped local service log reads to 64MB per pass to stop huge unrotated log files from spiking memory by gigabytes in one shot

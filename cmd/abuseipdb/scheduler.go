@@ -23,11 +23,23 @@ func Scheduler(apiKey string) {
 	go func() {
 		ticker := time.NewTicker(config.WorkerSleepHour * time.Hour)
 		for {
-			blockBlackListIPs(apiKey, urlBlacklist)
+			safeBlockBlackListIPs(apiKey, urlBlacklist)
 			<-ticker.C
 		}
 	}()
 
+}
+
+// safeBlockBlackListIPs isolates the ticked goroutine from a panic in
+// blockBlackListIPs (e.g. a transient abuseipdb outage) so it can't take
+// down the whole daemon.
+func safeBlockBlackListIPs(apiKey, urlBl string) {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Println("blockBlackListIPs recovered from panic:", r)
+		}
+	}()
+	blockBlackListIPs(apiKey, urlBl)
 }
 
 func blockBlackListIPs(apiKey string, urlBl string) {
@@ -47,7 +59,8 @@ func blockBlackListIPs(apiKey string, urlBl string) {
 	req.Header.Set("Key", apiKey)
 	req.Header.Set("Accept", "text/plain")
 
-	client, resp := &http.Client{Timeout: time.Second * 10}, new(http.Response)
+	client := &http.Client{Timeout: time.Second * 10}
+	var resp *http.Response
 
 	// Three attempts
 	for i := 0; i <= 3; i++ {
@@ -60,8 +73,9 @@ func blockBlackListIPs(apiKey string, urlBl string) {
 		break
 	}
 
-	if resp.Body == nil {
-		log.Println("resp.Body = nil")
+	// All attempts failed (network/DNS/TLS error) - resp is nil here.
+	if err != nil || resp == nil {
+		log.Println("Send req Do error, giving up:", err)
 		return
 	}
 	defer resp.Body.Close()

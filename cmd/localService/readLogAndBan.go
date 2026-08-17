@@ -3,13 +3,20 @@ package localService
 import (
 	"bytes"
 	"context"
+	"errors"
 	"github.com/vv198x/go2ban/cmd/firewall"
 	"github.com/vv198x/go2ban/cmd/validator"
 	"github.com/vv198x/go2ban/config"
 	"github.com/vv198x/go2ban/storage"
+	"io"
 	"log"
 	"os"
 )
+
+// maxReadChunk caps how many bytes checkLogAndBlock reads in a single
+// pass, so a huge backlog on one file (e.g. an unrotated docker json-log
+// that grew for months) can't spike memory by gigabytes in one shot.
+const maxReadChunk = 64 * 1024 * 1024 // 64MB
 
 func (s serviceWork) checkLogAndBlock(ctx context.Context, logFile string, countFailsMap, endBytesMap storage.Storage) {
 	file, errO := os.Open(logFile)
@@ -32,20 +39,29 @@ func (s serviceWork) checkLogAndBlock(ctx context.Context, logFile string, count
 	if endByte <= f.Size() {
 		startByte = endByte
 	} else {
+		startByte = 0
 		endBytesMap.Save(key, 0)
 	}
 
 	// Do not read 0 bytes
-	if f.Size()-startByte == 0 {
+	toRead := f.Size() - startByte
+	if toRead == 0 {
 		return
 	}
 
+	// Cap how much we read in a single pass so an unrotated log that grew
+	// unbounded (e.g. months of docker json-log output) can't blow up
+	// memory in one allocation; the remainder is picked up next cycle.
+	if toRead > maxReadChunk {
+		toRead = maxReadChunk
+	}
+
 	//Read Buffer
-	buf := make([]byte, f.Size()-startByte)
+	buf := make([]byte, toRead)
 
 	//Read where we finished last
 	readB, err := file.ReadAt(buf, startByte)
-	if err != nil {
+	if err != nil && !errors.Is(err, io.EOF) {
 		log.Println("Local service, can't readAt log file ", err)
 		return
 	}
@@ -74,5 +90,5 @@ func (s serviceWork) checkLogAndBlock(ctx context.Context, logFile string, count
 		}
 	}
 
-	endBytesMap.Save(key, endByte+int64(readB))
+	endBytesMap.Save(key, startByte+int64(readB))
 }
